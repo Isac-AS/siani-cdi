@@ -10,11 +10,11 @@ aprendizaje automático y analítica predictiva (Liu, 2015).
 ## 2. Contexto y Crecimiento de Datos
 Desde los años 80, el almacenamiento de datos crece exponencialmente:
 
-| Año | Volumen Mundial |
-|-----|-----------------|
-| 2023 | ~120 ZB |
-| 2025 (proyección) | ~181 ZB |
-| 2029 (proyección) | ~3x el volumen de 2025 |
+|Año              |Volumen Mundial       |
+|-----------------|----------------------|
+|2023             |~120 ZB               |
+|2025 (proyección)|~181 ZB               |
+|2029 (proyección)|~3x el volumen de 2025|
 
 El **90%** de los datos existentes se generaron en los últimos 2 años.
 
@@ -30,11 +30,11 @@ Unidades: Byte → KB → MB → GB → TB → PB → EB → ZB → YB (cada pas
 
 ## 3. Clasificación por Cantidad de Información (Dorian Pyle, 1999)
 
-| Tipo | Características | Operaciones permitidas | Ejemplo |
-|------|----------------|------------------------|---------|
-| **Nominal** | Símbolos/etiquetas sin orden | Igualdad (=) | Color: rojo, azul, negro |
-| **Ordinal** | Valores con orden transitivo | Orden (<, >) | frío < templado < calor |
-| **Continuo/Racional** | Medidas numéricas con cero absoluto | Todas (+, −, ×, ÷) | Temperatura °C, ventas |
+|Tipo                 |Características                    |Operaciones permitidas|Ejemplo                 |
+|---------------------|-----------------------------------|----------------------|------------------------|
+|**Nominal**          |Símbolos/etiquetas sin orden       |Igualdad (=)          |Color: rojo, azul, negro|
+|**Ordinal**          |Valores con orden transitivo       |Orden (<, >)          |frío < templado < calor |
+|**Continuo/Racional**|Medidas numéricas con cero absoluto|Todas (+, −, ×, ÷)    |Temperatura °C, ventas  |
 
 Notas:
 - Los nominales también se llaman **categóricos** (caso especial: dicotómicos o booleanos).
@@ -48,11 +48,11 @@ Notas:
 
 ## 4. Clasificación por Estructura
 
-| Tipo | Descripción | Ejemplos |
-|------|-------------|----------|
-| **Estructurados** | Organizados en tabla (filas/columnas) | CSV, Excel, BD relacionales |
-| **Semi-estructurados** | Contienen etiquetas semánticas propias | XML, JSON, HTML |
-| **No estructurados** | Sin estructura, ~80% de los datos | Texto, imágenes, audio, vídeo |
+|Tipo                  |Descripción                           |Ejemplos                     |
+|----------------------|--------------------------------------|-----------------------------|
+|**Estructurados**     |Organizados en tabla (filas/columnas) |CSV, Excel, BD relacionales  |
+|**Semi-estructurados**|Contienen etiquetas semánticas propias|XML, JSON, HTML              |
+|**No estructurados**  |Sin estructura, ~80% de los datos     |Texto, imágenes, audio, vídeo|
 
 ### Terminología de tablas (DataFrame en Pandas)
 - Tabla → **Conjunto de Datos**
@@ -72,11 +72,11 @@ Notas:
 - **No estructurados**: archivos en carpetas y BD No-SQL.
 
 ### Bases de datos No-SQL
-| Tipo | Descripción | Ejemplos |
-|------|-------------|----------|
-| **Clave-Valor** | Clave única → valor binario (más popular, eficiente) | Redis, DynamoDB |
-| **Documentales** | Documentos JSON/XML con búsqueda por pares clave-valor | MongoDB, CouchDB, Firestore |
-| **Grafo** | Nodos y aristas; consultas por patrones | Neo4j, ArangoDB, Virtuoso |
+|Tipo            |Descripción                                           |Ejemplos                   |
+|----------------|------------------------------------------------------|---------------------------|
+|**Clave-Valor** |Clave única → valor binario (más popular, eficiente)  |Redis, DynamoDB            |
+|**Documentales**|Documentos JSON/XML con búsqueda por pares clave-valor|MongoDB, CouchDB, Firestore|
+|**Grafo**       |Nodos y aristas; consultas por patrones               |Neo4j, ArangoDB, Virtuoso  |
 
 No usan SQL, no se basan en relaciones, no suelen permitir JOIN, arquitecturas distribuidas.
 
