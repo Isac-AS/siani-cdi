@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test CDI Bloque 2</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--tx:#1c1c1a;--mut:#6b6b66;--bd:#dcdad2;--ac:#2f5fd0;--ok:#1f8a4c;--okb:#e3f4ea;--ko:#c0392b;--kob:#fbe7e4}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#232321;--tx:#ecebe6;--mut:#a3a29b;--bd:#3a3a36;--ac:#7ea0f5;--ok:#58c88a;--okb:#16342452;--ko:#ef7b6e;--kob:#4a1f1a66}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.w{max-width:680px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin:12px 0}
+button{font:inherit;cursor:pointer}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin:8px 0}
+.opt:hover{border-color:var(--ac)}
+.opt.sel{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,var(--card))}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:12px 20px;margin:6px 6px 6px 0}
+.btn.sec{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+.btn:disabled{opacity:.4;cursor:default}
+.bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac)}
+.meta{color:var(--mut);font-size:14px;display:flex;justify-content:space-between;margin:6px 0}
+.tag{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.r{border-left:4px solid var(--bd)}
+.r.ok{border-left-color:var(--ok)}.r.ko{border-left-color:var(--ko)}
+.ans{padding:6px 10px;border-radius:8px;margin:4px 0;font-size:15px}
+.ans.ok{background:var(--okb);color:var(--ok)}.ans.ko{background:var(--kob);color:var(--ko)}
+.ex{color:var(--mut);font-size:14px;margin-top:6px}
+.big{font-size:44px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="w" id="app"></div>
+<script>
+// q = pregunta, o = opciones (la primera es la correcta), e = explicación, t = tema
+var Q=[
+{t:"Fundamentos",q:"Según Mitchell (1997), en el ejemplo de las damas, ¿cuál es la medida de rendimiento P?",o:["El porcentaje de partidas ganadas","Jugar a las damas","Las partidas jugadas","El número de movimientos por partida"],e:"T = jugar a las damas, P = % de partidas ganadas, E = partidas jugadas."},
+{t:"Fundamentos",q:"Aprendizaje activo vs aprendizaje por refuerzo: ¿cuál afirmación es correcta?",o:["En el activo el algoritmo elige qué muestras pide etiquetar a un oráculo; el refuerzo aprende por recompensas","En el activo se aprende por recompensas y en el refuerzo se piden etiquetas","Son el mismo paradigma con distinto nombre","Ambos usan solo datos sin etiquetar y ninguna recompensa"],e:"Activo: minimiza consultas de etiquetas. Refuerzo: prueba y error maximizando la recompensa a largo plazo."},
+{t:"Fundamentos",q:"Aprendizaje federado: ¿qué frase lo describe?",o:["Los modelos viajan, no los datos: cada nodo entrena en local y el servidor agrega parámetros","Todos los datos se envían a un servidor central que entrena","Se paraleliza el cálculo con datos i.i.d. en servidores potentes","Solo se usa con datos etiquetados por un oráculo"],e:"Lo que describe la tercera opción es el aprendizaje distribuido, no el federado."},
+{t:"Fundamentos",q:"¿Cuál es el sesgo inductivo de la SVM?",o:["Margen máximo entre las clases","Independencia condicional entre atributos","Lo cercano pertenece a la misma clase","Las clases se separan en cajas paralelas a los ejes"],e:"SVM → margen máximo. Naive Bayes → independencia condicional; k-NN → vecinos; árboles → cajas."},
+{t:"Fundamentos",q:"¿Qué sesgo inductivo tiene Naive Bayes?",o:["Máxima independencia condicional entre atributos","Margen máximo","Existe un hiperplano separador","Función no lineal de x"],e:"Naive Bayes asume atributos condicionalmente independientes dada la clase."},
+{t:"Fundamentos",q:"Verdadero o falso: el clasificador de Bayes (de mínimo error) elige la clase con mayor probabilidad a posteriori p(wᵢ|x).",o:["Verdadero","Falso"],e:"Es el óptimo teórico. El clasificador a priori es el que decide sin mirar la muestra."},
+{t:"Fundamentos",q:"Síntoma típico del sobreajuste (overfitting):",o:["Error de entrenamiento muy bajo y error de generalización alto","Error alto en entrenamiento y en test","Error igual en entrenamiento y test, ambos bajos","Error de test menor que el de entrenamiento"],e:"El modelo reproduce el ruido: memoriza en lugar de generalizar."},
+{t:"Lineales",q:"El perceptrón converge en un número finito de iteraciones si…",o:["Las clases son linealmente separables","Siempre, con cualquier conjunto de datos","El factor ρ es muy grande","Se usa la función sigmoide"],e:"Si no es separable no converge: hay que poner un máximo de iteraciones."},
+{t:"Lineales",q:"Con c = 5 clases y la estrategia «uno contra uno», ¿cuántos discriminantes hacen falta?",o:["10","5","20","25"],e:"c(c−1)/2 = 5·4/2 = 10."},
+{t:"Lineales",q:"¿Qué ventaja tiene Ho-Kashyap frente a Widrow-Hoff?",o:["Detecta si el problema no es linealmente separable","Es siempre más rápido","No necesita vector de márgenes","Funciona solo con 3 clases"],e:"En Ho-Kashyap b también es incógnita y solo crece; si queda algún error negativo, no hay solución."},
+{t:"Regresión",q:"Puntos (1,2), (2,3), (3,5). ¿Cuál es la recta de mínimos cuadrados y = w₀ + w₁x?",o:["w₁ = 1,5 ; w₀ ≈ 0,33","w₁ = 1 ; w₀ = 1","w₁ = 2 ; w₀ = −1","w₁ = 1,5 ; w₀ = 2"],e:"x̄=2, ȳ=10/3, media(xy)=23/3, media(x²)=14/3. w₁=(23/3−20/3)/(14/3−4)=1/(2/3)=1,5; w₀=ȳ−w₁x̄=10/3−3=1/3."},
+{t:"Regresión",q:"¿Qué cumple el R² ajustado respecto al R²?",o:["Solo sube si la variable añadida aporta; el R² nunca baja al añadir variables","Siempre es mayor que R²","Es idéntico al R²","Baja siempre al añadir variables"],e:"R² nunca baja aunque la variable sea irrelevante; el ajustado penaliza el nº de características."},
+{t:"Regresión",q:"Verdadero o falso: siempre se cumple RMSE ≥ MAE.",o:["Verdadero","Falso"],e:"Si RMSE ≫ MAE hay errores muy variables (algunos grandes); si RMSE ≈ MAE, errores de magnitud parecida."},
+{t:"Regresión",q:"Un R² negativo significa que…",o:["El modelo es peor que predecir siempre la media","El modelo es perfecto","Hay correlación inversa fuerte","Hay que usar el R² ajustado"],e:"R² = 0 equivale a la media; negativo es peor que la media."},
+{t:"Regresión",q:"Verdadero o falso: si el coeficiente de Pearson r = 0, no existe ninguna relación entre las variables.",o:["Falso: no hay relación lineal, pero puede haberla no lineal","Verdadero"],e:"Además, correlación no implica causalidad."},
+{t:"Logística",q:"¿Por qué no se usa MSE como pérdida en regresión logística?",o:["Con la sigmoide da una función no convexa con mínimos locales","Porque no es derivable","Porque da probabilidades fuera de [0,1]","Porque solo sirve con 2 variables"],e:"La entropía cruzada (log-verosimilitud negativa) es convexa y tiene un único mínimo."},
+{t:"Logística",q:"En regresión logística, si z = w₀ + wᵀx = 0, la probabilidad P(y=1|x) vale…",o:["0,5","0","1","e"],e:"σ(0) = 1/(1+e⁰) = 0,5: es la frontera de decisión."},
+{t:"Logística",q:"Pérdida de entropía cruzada con y = 1 y ŷ = 0,69. ¿Cuánto vale aproximadamente?",o:["0,37","1,17","0,69","0,31"],e:"−log(0,69) ≈ 0,37. Con y=0 sería −log(0,31) = 1,17."},
+{t:"Logística",q:"Softmax: ¿qué propiedad tienen las salidas?",o:["Son positivas y suman 1","Pueden ser negativas","Suman el número de clases","Son independientes entre sí"],e:"Un vector de pesos por clase; se elige la de mayor probabilidad."},
+{t:"Logística",q:"La regularización L1 (lasso) se diferencia de la L2 (ridge) en que…",o:["L1 produce pesos dispersos (muchos a cero); L2 pesos pequeños","L1 produce pesos pequeños; L2 pesos dispersos","Ninguna evita el sobreajuste","Solo L1 se puede usar con SGD"],e:"L2 = ridge (pesos pequeños). L1 = lasso (pesos dispersos)."},
+{t:"SVM",q:"En una SVM de margen duro con ‖w‖ = 2, ¿cuánto vale el ancho del margen?",o:["1","2","4","0,5"],e:"M = 2/‖w‖ = 2/2 = 1."},
+{t:"SVM",q:"En una SVM de margen blando, un C muy grande implica…",o:["Casi no se permiten errores (margen duro, riesgo de sobreajuste)","Margen muy ancho y muchos errores tolerados","Que el kernel no se usa","Que no hay vectores soporte"],e:"C pequeño → margen ancho y más errores tolerados. No hay fórmula para C: se ajusta experimentalmente."},
+{t:"SVM",q:"¿Qué son los vectores soporte?",o:["Las muestras con λᵢ ≠ 0, que definen el hiperplano","Todas las muestras de entrenamiento","Los centroides de cada clase","Las muestras mal etiquetadas"],e:"Son las que tocan el margen; w = Σλᵢyᵢxᵢ."},
+{t:"SVM",q:"¿Para qué sirve el truco del kernel?",o:["Separar en un espacio de mayor dimensión sin calcular Φ explícitamente","Reducir la dimensión de los datos","Elegir C automáticamente","Convertir la SVM en multiclase"],e:"El dual solo usa productos escalares, que se sustituyen por K(x,x'). Lo justifica el teorema de Cover."},
+{t:"SVM",q:"¿Cuál de estos es el kernel RBF/gaussiano?",o:["K(x,z) = exp(−‖x−z‖²/σ²)","K(x,z) = xᵀz","K(x,z) = (⟨x,z⟩ + c)^d","K(x,z) = ‖x−z‖"],e:"Lineal: xᵀz. Polinómico: (⟨x,z⟩+c)^d. RBF: exponencial de la distancia al cuadrado."},
+{t:"SVM",q:"En SVR con pérdida ε-insensible, las muestras dentro del tubo…",o:["No son vectores soporte (solución dispersa)","Son todas vectores soporte","Tienen la máxima holgura","Se eliminan del conjunto de test"],e:"Dentro del tubo de anchura 2ε el error es nulo."},
+{t:"No lineal",q:"Según Kolmogorov, ¿cuántas neuronas ocultas tiene la red de 3 capas con n = 4 entradas?",o:["9","4","8","5"],e:"2n+1 = 9. Pero el teorema no dice cómo elegir los pesos."},
+{t:"No lineal",q:"¿Qué regiones de decisión puede formar un MLP con 2 capas de proceso (una oculta)?",o:["Regiones convexas","Dos semiespacios","Regiones arbitrarias","Solo regiones circulares"],e:"1 capa: semiespacios; 2: convexas (AND de semiplanos); 3: arbitrarias (OR de convexas)."},
+{t:"No lineal",q:"MLP con n = 3 entradas, m₁ = 4 y m₂ = 2 neuronas ocultas y c = 1 salida. ¿Cuántos pesos (con umbrales)?",o:["29","24","20","32"],e:"(n+1)m₁ + (m₁+1)m₂ + (m₂+1)c = 4·4 + 5·2 + 3·1 = 29."},
+{t:"No lineal",q:"MLP vs red RBF: ¿cuál es correcta?",o:["La RBF usa representaciones locales y salida lineal; el MLP usa representaciones globales","El MLP usa representaciones locales y la RBF globales","Ambas usan hiperplanos combinados","La RBF necesita backpropagation obligatoriamente"],e:"La RBF es conceptualmente más simple y rápida de entrenar."},
+{t:"Árboles",q:"Entropía de un nodo con 6 muestras repartidas (3,3):",o:["1","0","0,92","0,5"],e:"Entropía máxima con 2 clases equiprobables = 1. (2,4) → 0,92; (1,5) → 0,65; (0,6) → 0. Gini (3,3) = 0,5."},
+{t:"Árboles",q:"¿Por qué C4.5 usa Gain Ratio en vez de ganancia de información?",o:["La ganancia favorece atributos con muchos valores (como un identificador)","La ganancia no se puede calcular con atributos continuos","El Gain Ratio es más rápido","La ganancia da valores negativos"],e:"Un identificador da hijos puros pero no generaliza."},
+{t:"Árboles",q:"En el ejemplo «¿jugar al tenis?», ¿qué atributo es la raíz?",o:["Outlook (ganancia 0,246)","Humidity (0,151)","Wind (0,048)","Temperature (0,029)"],e:"Se elige el de mayor ganancia de información."},
+{t:"Árboles",q:"En un árbol de regresión, ¿qué predice una hoja?",o:["La media (o mediana) de las muestras que llegan a ella","La clase mayoritaria","El valor máximo","Una probabilidad de clase"],e:"Y el criterio de división minimiza el RSS de los dos hijos."},
+{t:"Árboles",q:"Verdadero o falso: las fronteras de un árbol de decisión son siempre paralelas a los ejes.",o:["Verdadero","Falso"],e:"Es una de sus limitaciones (sesgo: separar en «cajas»)."},
+{t:"Ensembles",q:"¿Qué porcentaje de datos distintos contiene, de media, una muestra bootstrap?",o:["≈ 63,2 %","≈ 36,8 %","50 %","≈ 90 %"],e:"1 − 1/e ≈ 63,2 %; el 36,8 % restante queda «fuera de la bolsa» (OOB)."},
+{t:"Ensembles",q:"¿Qué reduce principalmente bagging y qué boosting?",o:["Bagging reduce varianza; boosting reduce sobre todo sesgo","Bagging reduce sesgo; boosting reduce varianza","Los dos reducen solo la varianza","Los dos reducen solo el sesgo"],e:"Bagging: paralelo con bootstrap. Boosting: secuencial con pesos."},
+{t:"Ensembles",q:"Random forest con p = 100 atributos en clasificación. Valor por defecto de k (atributos por partición):",o:["10","33","100","1"],e:"Clasificación k = √p = 10; regresión k = p/3. Bagging = RF con k = p."},
+{t:"Ensembles",q:"¿Por qué bagging mejora los árboles pero apenas mejora k-NN?",o:["Los árboles son inestables (alta varianza) y k-NN es estable","k-NN no admite bootstrap","Los árboles tienen sesgo alto","k-NN ya es un ensemble"],e:"Bagging funciona mejor con modelos de bajo sesgo y alta varianza."},
+{t:"Ensembles",q:"AdaBoost es, comparado con bagging…",o:["Más sensible al ruido y a los outliers","Menos sensible al ruido","Paralelo","Un método sin pesos de muestras"],e:"Insiste en los casos difíciles, que pueden ser ruido."},
+{t:"Ensembles",q:"En stacking, ¿cómo se evita el sobreajuste al entrenar el metapredictor?",o:["Generando las predicciones de primer nivel con validación cruzada k-fold o con blending","Usando los mismos datos para los dos niveles","Usando solo modelos del mismo algoritmo","Quitando la validación"],e:"Cada muestra debe predecirse con modelos que no la vieron."},
+{t:"Ensembles",q:"25 clasificadores independientes con error ε = 0,35. El ensemble (voto por mayoría) falla si fallan…",o:["13 o más, con probabilidad ≈ 0,06","13 o más, con probabilidad ≈ 0,35","Al menos 1, con probabilidad ≈ 0,35","20 o más, con probabilidad ≈ 0,5"],e:"Mayoría de 25 = 13. P(error) = Σ C(25,i)εⁱ(1−ε)²⁵⁻ⁱ ≈ 0,06."},
+{t:"Clustering",q:"k-medias: ¿encuentra siempre el óptimo global de la SSE?",o:["No: converge a un mínimo local que depende de la inicialización","Sí, siempre","Sí, si k es par","No converge nunca"],e:"Entre ejecuciones se elige la de menor SSE."},
+{t:"Clustering",q:"Con {2,4,10,12,3,20,30,11,25} y k = 2, el resultado final de k-medias es K₁ = {2,3,4,10,11,12} y K₂ = {20,25,30}. ¿Cuánto vale Z₂?",o:["25","22","20","30"],e:"Z₂ = (20+25+30)/3 = 25. Z₁ = 42/6 = 7."},
+{t:"Clustering",q:"Enlace simple (single) vs completo (complete):",o:["Simple usa la distancia mínima (efecto cadena, sensible a outliers); completo usa la máxima","Simple usa la distancia máxima; completo la mínima","Ambos usan la distancia media","Ward es lo mismo que el enlace simple"],e:"Ward fusiona el par que menos aumenta la SSE."},
+{t:"Clustering",q:"Un valor de silueta negativo para una muestra indica que…",o:["Probablemente está mal asignada","Está perfectamente asignada","Está en la frontera exacta","Es un centroide"],e:"Cerca de 1: bien asignada; cerca de 0: en la frontera."},
+{t:"Evaluación",q:"Modelo con error alto en entrenamiento y también alto en test. Diagnóstico:",o:["Sesgo alto (subajuste); más datos no ayudan","Varianza alta (sobreajuste); más datos ayudan","Ruido irreducible cero","Está bien ajustado"],e:"Varianza alta: error bajo en entrenamiento y alto en test."},
+{t:"Evaluación",q:"Descomposición del error esperado:",o:["Err = Sesgo² + Varianza + Error irreducible","Err = Sesgo + Varianza","Err = Sesgo² × Varianza","Err = Varianza − Sesgo²"],e:"Al subir la complejidad, el sesgo baja y la varianza sube."},
+{t:"Evaluación",q:"k-fold vs LOOCV:",o:["LOOCV tiene menos sesgo pero más varianza y mucho más coste; k = 5 o 10 es el compromiso","LOOCV es más rápido que k-fold","k-fold tiene siempre k = N","LOOCV tiene más sesgo y menos varianza"],e:"En LOOCV los N modelos son casi iguales y están correlacionados."},
+{t:"Evaluación",q:"Matriz de confusión: TP = 40, FN = 10, FP = 5, TN = 45. ¿Cuál es la precisión (VP+)?",o:["0,889","0,80","0,90","0,85"],e:"Precisión = TP/(TP+FP) = 40/45 = 0,889. Sensibilidad = 0,80; especificidad = 0,90; accuracy = 0,85."},
+{t:"Evaluación",q:"TP = 30, FN = 20, FP = 10, TN = 40. ¿Cuál es la sensibilidad (recall)?",o:["0,60","0,75","0,70","0,80"],e:"TP/(TP+FN) = 30/50 = 0,60. (Precisión = 30/40 = 0,75; especificidad = 40/50 = 0,80; accuracy = 0,70.)"},
+{t:"Evaluación",q:"En el espacio ROC, ¿qué punto es el clasificador perfecto y qué representa la diagonal?",o:["(fpr, tpr) = (0, 1); la diagonal es el azar (AUC 0,5)","(1, 0); la diagonal es el óptimo","(1, 1); la diagonal es un clasificador conservador","(0, 0); la diagonal es el AUC = 1"],e:"Mejor = más al noroeste. (1,0) lo hace todo al revés."},
+{t:"Evaluación",q:"Tienes un 99 % de accuracy con clases muy desbalanceadas. Lo más sensato es…",o:["Desconfiar y mirar sensibilidad, precisión, F1 o MCC, y balancear los datos","Dar el modelo por excelente","Usar solo R²","Usar solo el error de entrenamiento"],e:"Un clasificador puede tener 99 % de accuracy y ser inútil."},
+{t:"Evaluación",q:"¿Para qué se usa el conjunto de validación?",o:["Ajustar hiperparámetros y detectar sobreajuste","Ajustar los pesos del modelo","Evaluar varias veces la generalización final","Aumentar el tamaño del entrenamiento"],e:"El test se usa una sola vez, al final; sus etiquetas no deben influir en el modelo."}
+];
+
+var app=document.getElementById('app'),S={};
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function home(){
+  app.innerHTML='<h1>Test CDI · Bloque 2</h1><p style="color:var(--mut)">Clasificación, predicción y descripción. Preguntas variadas (teoría, verdadero/falso y cálculo). La corrección sale al final.</p>'+
+  '<div class="card"><button class="btn" onclick="start('+Q.length+')">Test completo ('+Q.length+')</button>'+
+  '<button class="btn sec" onclick="start(25)">Test rápido (25 al azar)</button>'+
+  '<button class="btn sec" onclick="start(10)">Mini (10)</button></div>'+
+  '<p class="ex">Las preguntas y las opciones se mezclan cada vez.</p>';
+}
+function start(n){
+  var qs=shuffle(Q).slice(0,n).map(function(x){
+    var opts=shuffle(x.o.map(function(t,i){return{t:t,c:i===0}}));
+    return{t:x.t,q:x.q,e:x.e,opts:opts,pick:null};
+  });
+  S={qs:qs,i:0};show();
+}
+function show(){
+  var x=S.qs[S.i],n=S.qs.length;
+  var h='<div class="meta"><span>Pregunta '+(S.i+1)+' / '+n+'</span><span>'+esc(x.t)+'</span></div>'+
+  '<div class="bar"><i style="width:'+(S.i/n*100)+'%"></i></div>'+
+  '<div class="card"><p style="margin-top:0"><b>'+esc(x.q)+'</b></p>';
+  x.opts.forEach(function(o,k){
+    h+='<button class="opt'+(x.pick===k?' sel':'')+'" onclick="pick('+k+')">'+String.fromCharCode(65+k)+') '+esc(o.t)+'</button>';
+  });
+  h+='</div><button class="btn sec" onclick="prev()" '+(S.i===0?'disabled':'')+'>← Anterior</button>'+
+  '<button class="btn" onclick="next()" '+(x.pick===null?'disabled':'')+'>'+(S.i===n-1?'Terminar y corregir':'Siguiente →')+'</button>';
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+function pick(k){S.qs[S.i].pick=k;show()}
+function prev(){if(S.i>0){S.i--;show()}}
+function next(){if(S.i<S.qs.length-1){S.i++;show()}else finish()}
+function finish(){
+  var ok=0,topics={};
+  S.qs.forEach(function(x){
+    var good=x.opts[x.pick].c;if(good)ok++;
+    topics[x.t]=topics[x.t]||[0,0];topics[x.t][1]++;if(good)topics[x.t][0]++;
+  });
+  var n=S.qs.length,pct=Math.round(ok/n*100);
+  var h='<h1>Resultado</h1><div class="card" style="text-align:center"><div class="big">'+ok+' / '+n+'</div><div>'+pct+' %  ·  nota sobre 10: '+(ok/n*10).toFixed(1)+'</div></div>';
+  h+='<div class="card"><b>Por temas</b>';
+  Object.keys(topics).forEach(function(t){h+='<div class="meta"><span>'+esc(t)+'</span><span>'+topics[t][0]+' / '+topics[t][1]+'</span></div>'});
+  h+='</div><button class="btn" onclick="start('+n+')">Repetir</button><button class="btn sec" onclick="home()">Inicio</button>';
+  var fails=S.qs.filter(function(x){return !x.opts[x.pick].c});
+  if(fails.length)h+='<button class="btn sec" onclick="redo()">Repetir solo falladas ('+fails.length+')</button>';
+  h+='<h1 style="margin-top:22px">Corrección</h1>';
+  S.qs.forEach(function(x,i){
+    var good=x.opts[x.pick].c,right=x.opts.filter(function(o){return o.c})[0];
+    h+='<div class="card r '+(good?'ok':'ko')+'"><div class="tag">'+(i+1)+' · '+esc(x.t)+' · '+(good?'Correcta':'Incorrecta')+'</div><p style="margin:6px 0"><b>'+esc(x.q)+'</b></p>';
+    if(!good)h+='<div class="ans ko">Tu respuesta: '+esc(x.opts[x.pick].t)+'</div>';
+    h+='<div class="ans ok">Correcta: '+esc(right.t)+'</div><div class="ex">'+esc(x.e)+'</div></div>';
+  });
+  app.innerHTML=h;window.scrollTo(0,0);
+}
+function redo(){
+  var f=S.qs.filter(function(x){return !x.opts[x.pick].c}).map(function(x){
+    return{t:x.t,q:x.q,e:x.e,opts:shuffle(x.opts.map(function(o){return{t:o.t,c:o.c}})),pick:null}});
+  S={qs:f,i:0};show();
+}
+home();
+</script>
+</body>
+</html>
