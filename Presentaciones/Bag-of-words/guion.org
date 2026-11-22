@@ -1,0 +1,142 @@
+#+TITLE: Guion: Bag of Words
+#+SUBTITLE: Exposición de cinco minutos
+#+AUTHOR:
+#+DATE:
+#+LANGUAGE: es
+#+OPTIONS: toc:2 num:nil
+#+STARTUP: overview
+
+* Planteamiento
+
+Presentación: [[file:presentacion.org][presentacion.org]].
+
+Exposición directa de seis diapositivas estructuradas para un ritmo de 50 segundos por diapositiva. Un único ejemplo de cuatro documentos conecta el preprocesamiento, el conteo de palabras, la representación matricial y el agrupamiento no supervisado, culminando en la transición hacia espacios latentes y aplicaciones reales.
+
+| Diapositiva                                | Intervalo   | Duración |
+|--------------------------------------------+-------------+----------|
+| 1. Bag of Words: Del texto a los números   | 0:00–0:40   |     40 s |
+| 2. Un documento, un vector                 | 0:40–1:30   |     50 s |
+| 3. Del vector al agrupamiento              | 1:30–2:20   |     50 s |
+| 4. Lo que se pierde al contar              | 2:20–3:05   |     45 s |
+| 5. De BoW al espacio latente               | 3:05–4:15   |     70 s |
+| 6. La idea esencial y aplicaciones         | 4:15–5:00   |     45 s |
+|--------------------------------------------+-------------+----------|
+| Total                                      |             |    300 s |
+
+Los tiempos son orientativos. Incluir breves pausas al señalar la tabla de frecuencias y el gráfico de agrupamiento.
+
+* Texto oral
+
+** 1. Bag of Words: Del texto a los números · 0:00–0:40
+
+Bag of Words, o bolsa de palabras, es una de las técnicas fundacionales del procesamiento del lenguaje natural para convertir texto no estructurado en representaciones vectoriales numéricas.
+
+Antes de contar palabras, aplicamos un preprocesamiento básico:
+1. *Tokenizamos* el texto para separar las palabras individuales.
+2. *Limpiamos* signos de puntuación y normalizamos a minúsculas.
+3. *Eliminamos palabras vacías* o /stop words/ (como artículos o preposiciones), conservando solo los términos que aportan carga temática.
+
+Trabajaremos con una colección de cuatro documentos breves: dos sobre partidos deportivos y dos sobre cocina. Nuestro objetivo es proyectar estas frases en un espacio matemático donde una máquina pueda operarlas.
+
+** 2. Un documento, un vector · 0:40–1:30
+
+A partir de la colección construimos un vocabulario común con las ocho palabras únicas presentes. Cada palabra define una columna fija de esta matriz documento-término, y cada documento se convierte en una fila.
+
+Por ejemplo, en la frase A («equipo gana partido») asignamos un 1 en esas tres posiciones y un 0 en todas las demás. Cada fila constituye un vector de ocho dimensiones.
+
+Nótese dos aspectos fundamentales:
+- Conservamos la frecuencia de término (/term frequency/, $tf$), pero *descartamos totalmente el orden* y la sintaxis.
+- En colecciones del mundo real, donde el vocabulario supera fácilmente las diez mil palabras, la gran mayoría de las entradas son cero; se trata de una *matriz dispersa* (/sparse matrix/).
+
+** 3. Del vector al agrupamiento · 1:30–2:20
+
+Una vez que cada documento es un punto en el espacio vectorial, podemos medir distancias geométricas (como la distancia euclídea o la similitud coseno) y aplicar algoritmos de agrupamiento, como /k-means/.
+
+En el gráfico de la izquierda vemos una proyección simplificada:
+- En el eje vertical medimos la afinidad con el vocabulario deportivo; allí se agrupan los documentos A y B.
+- En el eje horizontal medimos la afinidad con la cocina; allí se concentran los documentos C y D.
+
+El agrupamiento es no supervisado: el algoritmo no conoce las etiquetas «deporte» o «cocina», solo detecta vecindad espacial por términos compartidos. Nosotros interpretamos los grupos.
+
+Principio clave: *Bag of Words proporciona la representación métrica; el algoritmo de agrupamiento descubre la estructura.*
+
+** 4. Lo que se pierde al contar · 2:20–3:05
+
+Pese a su utilidad, BoW sufre limitaciones críticas.
+
+La primera es la *pérdida de sintaxis*. Consideremos:
+- «El perro muerde al hombre»
+- «El hombre muerde al perro»
+
+Tras limpiar las /stop words/, ambas oraciones quedan reducidas al mismo multiconjunto: una ocurrencia de «hombre», «muerde» y «perro». Producen exactamente el mismo vector numérico, a pesar de tener significados opuestos.
+
+La segunda limitación es la *ausencia de semántica léxica*. «Coche» y «automóvil» son columnas ortogonales e independientes; el modelo ignora que son sinónimos. Igualmente, palabras polisémicas como «banco» colapsan en una sola dimensión. Técnicas como los N-gramas rescatan algo de contexto local, pero multiplican exponencialmente el tamaño del vocabulario.
+
+** 5. De BoW al espacio latente · 3:05–4:15
+
+Esta limitación motiva el salto a los *espacios latentes*.
+
+En BoW nos movemos en un *espacio explícito*: cada eje es una palabra literal. Para mejorar este espacio, se suele aplicar *TF-IDF*, que premia los términos frecuentes en un documento concreto pero penaliza aquellos que aparecen en casi toda la colección, reduciendo el ruido.
+
+Sin embargo, para descubrir conceptos subyacentes aplicamos una descomposición matricial SVD sobre la matriz documento-término. Esto da lugar a *LSA* (/Latent Semantic Analysis/):
+- Pasamos de miles de palabras a pocas dimensiones latentes continuas.
+- Términos como «coche» y «automóvil» se aproximan en el espacio latente porque suelen aparecer acompañados de palabras similares (como «carretera» o «conducir»).
+
+En el aprendizaje profundo moderno, redes neuronales como autoencoders o modelos de /embeddings/ (Word2Vec) aprenden estos espacios densos y latentes de manera no lineal.
+
+** 6. La idea esencial y aplicaciones · 4:15–5:00
+
+Para sintetizar: Bag of Words es el puente más simple y directo entre el texto y las matemáticas.
+
+Sigue siendo una herramienta muy relevante en la práctica:
+- Es el estándar para filtrado rápido de *spam*.
+- Sirve como línea base sólida (/baseline/) en clasificación y categorización de noticias.
+- Permite búsquedas rápidas en motores de recuperación de información.
+
+Su evolución histórica nos lleva desde el conteo básico hasta TF-IDF, LSA, y finalmente los /embeddings/ y transformadores contextuales actuales.
+
+Conclusión esencial: *Contar palabras es el punto de partida del procesamiento del lenguaje natural, no la comprensión de conceptos.*
+
+* Notas conceptuales
+
+** Representar, agrupar y aprender significado
+
+- *Espacio explícito vs. latente:* BoW asigna un eje a cada palabra literal observada; un espacio latente descubre dimensiones sintéticas continuas basadas en co-ocurrencia estadística.
+- *k-means en BoW:* Agrupa vectores directamente en el espacio de términos mediante distancias métricas. No requiere un espacio latente previo, pero se beneficia de la reducción de dimensionalidad para combatir la maldición de la dimensionalidad.
+- *LSA y SVD truncada:* La descomposición en valores singulares aproxima la matriz original con menor rango, filtrando ruido y capturando dependencias semánticas globales.
+- *Preprocesamiento:* La tokenización, lematización/stemming y el filtrado de stop words determinan radicalmente la calidad de la matriz BoW final.
+
+** Variantes y conceptos para ampliar
+
+- *BoW binario:* Registra presencia (1) o ausencia (0), útil para textos muy cortos.
+- *TF-IDF:* $tf(t, d) \times \log\left(\frac{N}{df(t)}\right)$. Pondera la especificidad léxica.
+- *N-gramas:* Cuentan secuencias consecutivas (unigramas, bigramas, trigramas) para preservar dependencias locales.
+- *Matrices dispersas:* Formatos como CSR (/Compressed Sparse Row/) almacenan solo valores no nulos, optimizando memoria y cálculo.
+- *Bag of Visual Words (BoVW):* Análogo en visión por computador, donde los «términos» son descriptores visuales (como SIFT) agrupados en un diccionario visual.
+
+* Edición y exportación
+
+** Diseño
+
+- Beamer con tema *Metropolis*, formato 16:9, acento turquesa (=#087E8B=) y naranja de contraste (=#D9531E=).
+- Barra de progreso superior y numeración en fracción.
+- Diagrama TikZ vectorial integrado en la diapositiva 3.
+- Tabla formateada con =booktabs= y espaciado proporcional.
+
+** Exportación a PDF
+
+Desde la terminal en el directorio del proyecto:
+
+#+begin_src bash
+emacs --batch presentacion.org --eval "(progn (require 'ox-beamer) (org-beamer-export-to-latex))"
+pdflatex -interaction=nonstopmode presentacion.tex
+pdflatex -interaction=nonstopmode presentacion.tex
+#+end_src
+
+O bien directamente desde Emacs con =M-x org-beamer-export-to-pdf=.
+
+* Referencias recomendadas
+
+- Christopher D. Manning, Prabhakar Raghavan y Hinrich Schütze. /Introduction to Information Retrieval/. Cambridge University Press, 2008.
+- Scott Deerwester et al. «Indexing by Latent Semantic Analysis». /Journal of the American Society for Information Science/, 41(6), 391–407, 1990.
+- Tomas Mikolov et al. «Efficient Estimation of Word Representations in Vector Space». /arXiv:1301.3781/, 2013.

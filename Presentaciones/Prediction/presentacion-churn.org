@@ -1,0 +1,203 @@
+#+TITLE: Predicción del abandono de clientes en telecomunicaciones
+#+SUBTITLE: Lectura crítica de Fujo, Subramanian y Khder (2022)
+#+LANGUAGE: es
+#+OPTIONS: H:1 toc:nil num:nil title:nil author:nil date:nil
+#+STARTUP: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectratio=169,11pt]
+#+LATEX_COMPILER: pdflatex
+#+BEAMER_FRAME_LEVEL: 1
+#+BEAMER_THEME: moloch
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{positioning}
+
+# Exportación: cargar ox-beamer y ejecutar M-x org-beamer-export-to-pdf.
+# Guion y referencias ampliadas: guion-churn.org.
+# Los tiempos de las propiedades son orientativos y no se exportan.
+
+* ¿Qué clientes van a abandonar?
+:PROPERTIES:
+:TIEMPO: 0:00–1:00
+:END:
+
+- /Customer churn prediction/: predicción del abandono de clientes.
+- Clasificación binaria: *abandona / no abandona*.
+- Objetivo: orientar acciones de retención hacia clientes en riesgo.
+
+#+begin_export latex
+\vfill
+\footnotesize
+\textit{Customer Churn Prediction in Telecommunication Industry Using Deep Learning}.\\
+S. W. Fujo, S. Subramanian y M. A. Khder (2022).\\
+\textit{Information Sciences Letters}, 11(1), 185--198.\\
+\href{https://doi.org/10.18576/isl/110120}{doi:10.18576/isl/110120}
+#+end_export
+
+* Los datos: clases desequilibradas
+:PROPERTIES:
+:TIEMPO: 1:00–2:00
+:END:
+
+#+ATTR_LATEX: :booktabs t :align lrr :center t
+| Característica         | IBM Telco | Cell2Cell |
+|------------------------+-----------+-----------|
+| Clientes               |     7.043 |    51.047 |
+| Variables predictoras  |        20 |        57 |
+| Clientes que abandonan |    26,5 % |    28,8 % |
+
+- La mayoría de los clientes *no abandona*.
+- Acertar en total no basta: interesa *detectar abandonos* y controlar las *falsas alarmas*.
+
+#+begin_export latex
+\vfill
+\footnotesize Fuente: tabla de características, p. 188.
+#+end_export
+
+* La propuesta: combinar varias técnicas
+:PROPERTIES:
+:TIEMPO: 2:00–3:30
+:END:
+
+#+begin_export latex
+\begin{center}
+\begin{tikzpicture}[node distance=0.6cm,
+  box/.style={rectangle, rounded corners=3pt, draw, thick,
+              minimum height=0.9cm, minimum width=2.2cm,
+              align=center, font=\small}]
+\node[box] (d) {Datos};
+\node[box, right=of d] (p) {Preparación};
+\node[box, right=of p] (r) {Red neuronal};
+\node[box, right=of r] (pr) {Predicción};
+\draw[->, thick] (d) -- (p);
+\draw[->, thick] (p) -- (r);
+\draw[->, thick] (r) -- (pr);
+\end{tikzpicture}
+\end{center}
+#+end_export
+
+- *Lasso*: selección de variables.
+- *Random Oversampling*: duplicación de ejemplos de la clase minoritaria.
+- *Deep-BP-ANN*: red neuronal entrenada mediante retropropagación.
+- *Regularización de actividad y parada temprana*: control del sobreajuste.
+- Configuración destacada: capas de *250 neuronas*.
+
+#+begin_export latex
+\vfill
+\footnotesize Fuente: método y configuración, pp. 188--190 y 192--195. El esquema resume componentes; no determina cuándo se separan entrenamiento y prueba.
+#+end_export
+
+* ¿Cómo comprueban si funciona?
+:PROPERTIES:
+:TIEMPO: 3:30–4:30
+:END:
+
+- *Holdout*: 90 % entrenamiento / 10 % prueba.
+- *Validación cruzada*: 10 particiones.
+
+#+ATTR_LATEX: :booktabs t :align ll :center t
+| Métrica                 | Pregunta                            |
+|-------------------------+-------------------------------------|
+| Exactitud (/accuracy/)  | ¿Cuánto acierta en total?            |
+| Sensibilidad (/recall/) | ¿Cuántos abandonos detecta?          |
+| Precisión (/precision/) | ¿Cuántas alertas resultan correctas? |
+
+#+begin_export latex
+\vfill
+\footnotesize Fuente: validación y métricas, pp. 190--191.
+#+end_export
+
+* Resultados: detección y falsas alarmas
+:PROPERTIES:
+:TIEMPO: 4:30–6:15
+:END:
+
+#+begin_export latex
+\small
+\begin{center}
+\begin{tabular}{llrr}
+\toprule
+Datos & Evaluación & Exactitud & Sensibilidad \\
+\midrule
+IBM Telco & Holdout & 88,12\,\% & 93,05\,\% \\
+IBM Telco & Validación cruzada & 86,57\,\% & \alert{94,45\,\%} \\
+Cell2Cell & Holdout & 79,38\,\% & 89,32\,\% \\
+Cell2Cell & Validación cruzada & \alert{73,90\,\%} & 89,74\,\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+\normalsize
+#+end_export
+
+- Sensibilidad elevada en ambos conjuntos.
+- Cell2Cell, validación cruzada: precisión del *68,15 %*.
+- En esa evaluación: unas *32 falsas alarmas por cada 100 alertas*.
+
+#+begin_export latex
+\vfill
+\footnotesize Fuente: tabla de resultados, p. 193. Las cifras corresponden al experimento; su traslado a una población real requiere validación.
+#+end_export
+
+* ¿Mejora frente a otras alternativas?
+:PROPERTIES:
+:TIEMPO: 6:15–7:15
+:END:
+
+- Los autores comunican mejores resultados frente a *XGBoost, regresión logística, Naïve Bayes y KNN*.
+- Comparación con un antecedente: *Cell2Cell, validación cruzada de 10 particiones*.
+
+#+ATTR_LATEX: :booktabs t :align lr :center t
+| Modelo                    | Exactitud |
+|---------------------------+-----------|
+| CNN/LFNN, antecedente      |   71,66 % |
+| Deep-BP-ANN, este artículo |   73,90 % |
+
+#+begin_export latex
+\alert{Diferencia: +2,24 puntos porcentuales.}
+
+\begin{alertblock}{Cautela}
+Mismo conjunto de datos no garantiza idénticas condiciones experimentales.
+\end{alertblock}
+#+end_export
+
+#+begin_export latex
+\vfill
+\footnotesize Fuentes: comparación interna, pp. 192--193; antecedente de Umayaparvathi e Iyakutti (2017), recogido en p. 194.
+#+end_export
+
+* Limitaciones de la evaluación
+:PROPERTIES:
+:TIEMPO: 7:15–9:00
+:END:
+
+1. *Posible fuga de datos.*
+   No se aclara el orden entre sobremuestreo y partición. Si se duplica antes de dividir, podría haber copias en entrenamiento y prueba.
+2. *Entrenamiento diferente entre protocolos.*
+   Parada temprana en holdout; número fijo de épocas en validación cruzada.
+3. *Reproducibilidad e incertidumbre.*
+   Faltan detalles de configuración y medidas de variación de los resultados.
+
+*La fuga de datos es un riesgo, no un error demostrado.*
+
+#+begin_export latex
+\vfill
+\footnotesize Valoración crítica de la descripción del método y la evaluación, pp. 188--190 y 192--195.
+#+end_export
+
+* Conclusión
+:PROPERTIES:
+:TIEMPO: 9:00–10:00
+:END:
+
+- *Propuesta*: combinar una red neuronal con selección de variables, equilibrado y control del sobreajuste.
+- *Resultado*: alta sensibilidad en los experimentos presentados.
+- *Pendiente*: evaluación más transparente, reproducible y comparable.
+
+#+begin_export latex
+\bigskip
+\begin{block}{Idea final}
+Resultados prometedores, pero evidencia insuficiente para afirmar una superioridad definitiva en una aplicación real.
+\end{block}
+\medskip
+\centering\textit{¿Qué haría falta para confiar en este modelo en producción?}
+#+end_export

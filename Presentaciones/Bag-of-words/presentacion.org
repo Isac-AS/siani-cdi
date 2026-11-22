@@ -1,0 +1,270 @@
+#+TITLE: Bag of Words
+#+SUBTITLE: Del texto a los números
+#+AUTHOR:
+#+DATE:
+#+LANGUAGE: es
+#+OPTIONS: H:1 toc:nil num:nil title:nil author:nil date:nil tags:nil ^:nil
+#+STARTUP: overview
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectratio=169,10pt]
+#+LATEX_COMPILER: pdflatex
+#+BEAMER_FRAME_LEVEL: 1
+#+BEAMER_THEME: metropolis
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \AtBeginDocument{\metroset{progressbar=frametitle,numbering=fraction,block=fill}}
+#+LATEX_HEADER: \usepackage{booktabs}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+#+LATEX_HEADER: \definecolor{bowaccent}{HTML}{087E8B}
+#+LATEX_HEADER: \definecolor{boworange}{HTML}{D9531E}
+#+LATEX_HEADER: \AtBeginDocument{\setbeamercolor{alerted text}{fg=bowaccent}}
+#+LATEX_HEADER: \AtBeginDocument{\setbeamercolor{progress bar}{fg=bowaccent}}
+#+LATEX_HEADER: \AtBeginDocument{\setbeamertemplate{navigation symbols}{}}
+
+# Guion y tiempos: guion.org. Seis diapositivas, sin portada independiente.
+# Todos los diagramas y tablas son vectoriales y autoincluidos.
+
+* Bag of Words: Del texto a los números
+
+#+begin_export latex
+\vspace{-0.5em}
+Representar documentos textuales como \alert{vectores numéricos} basados en el conteo de palabras.
+
+\medskip
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{Paso previo: Preprocesamiento}
+      \begin{itemize}\setlength{\itemsep}{0.2em}
+        \item \textbf{Tokenización:} segmentar texto en palabras.
+        \item \textbf{Limpieza:} minúsculas y quitar puntuación.
+        \item \textbf{Stop words:} eliminar palabras vacías (\textit{el, de, un}) sin carga semántica.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{block}{Colección de ejemplo (4 documentos)}
+      \textbf{A}\quad equipo gana partido\par\smallskip
+      \textbf{B}\quad equipo pierde partido\par\smallskip
+      \textbf{C}\quad cocina prepara sopa\par\smallskip
+      \textbf{D}\quad cocina prepara arroz
+    \end{block}
+  \end{column}
+\end{columns}
+
+\bigskip
+\begin{center}
+  \small
+  Texto original $\longrightarrow$ \textbf{Preprocesamiento} $\longrightarrow$ \alert{Bolsa de palabras (multiconjunto)}
+\end{center}
+#+end_export
+
+* Un documento, un vector
+
+#+begin_export latex
+\vspace{-0.5em}
+Cada columna fija representa una palabra del \alert{vocabulario común} ($|V| = 8$).
+
+\smallskip
+\begin{center}
+\small
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Doc.} & \textbf{equipo} & \textbf{partido} & \textbf{gana} & \textbf{pierde} & \textbf{cocina} & \textbf{prepara} & \textbf{sopa} & \textbf{arroz} \\
+\midrule
+\textbf{A} & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+\textbf{B} & 1 & 1 & 0 & 1 & 0 & 0 & 0 & 0 \\
+\textbf{C} & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0 \\
+\textbf{D} & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\smallskip
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0.2em}
+      \item \textbf{Vector por fila:} $\mathbf{v}_A = (1, 1, 1, 0, 0, 0, 0, 0)$.
+      \item \textbf{Frecuencia ($tf$):} cuántas veces aparece cada término.
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{itemize}\setlength{\itemsep}{0.2em}
+      \item \textbf{Orden descartado:} se pierde la posición en la frase.
+      \item \textbf{Dispersión:} en corpus reales ($|V| \gg 10^4$), la mayoría de valores son $0$ (\textit{sparse matrix}).
+    \end{itemize}
+  \end{column}
+\end{columns}
+#+end_export
+
+* Del vector al agrupamiento
+
+#+begin_export latex
+\vspace{-0.5em}
+\begin{center}
+  \small
+  Documentos $\longrightarrow$ \textbf{Vectores BoW} $\longrightarrow$ \textbf{Distancia geométrica} $\longrightarrow$ \alert{\textit{k-means} ($k=2$)}
+\end{center}
+
+\smallskip
+\begin{columns}[c,onlytextwidth]
+  \begin{column}{0.47\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.80, every node/.style={font=\scriptsize}]
+      % Ejes
+      \draw[->, thick, -{Latex[length=2mm]}] (0,0) -- (4.2,0) node[below=2pt] {\textbf{Eje Cocina}};
+      \draw[->, thick, -{Latex[length=2mm]}] (0,0) -- (0,3.6) node[above right=1pt] {\textbf{Eje Deporte}};
+      \draw[help lines, color=gray!25, dashed] (0,0) grid[step=0.8] (3.8,3.2);
+
+      % Cluster 1 - Deporte
+      \fill[bowaccent!18, draw=bowaccent, thick, dashed] (1.3, 2.3) ellipse (0.85cm and 0.62cm);
+      \node[circle, fill=bowaccent, text=white, inner sep=1.8pt] at (1.05, 2.45) {\textbf{A}};
+      \node[circle, fill=bowaccent, text=white, inner sep=1.8pt] at (1.55, 2.15) {\textbf{B}};
+      \node[bowaccent, font=\scriptsize\bfseries, above] at (1.3, 2.95) {Grupo 1: Deporte};
+
+      % Cluster 2 - Cocina
+      \fill[boworange!18, draw=boworange, thick, dashed] (2.9, 0.8) ellipse (0.85cm and 0.62cm);
+      \node[circle, fill=boworange, text=white, inner sep=1.8pt] at (2.65, 0.95) {\textbf{C}};
+      \node[circle, fill=boworange, text=white, inner sep=1.8pt] at (3.15, 0.65) {\textbf{D}};
+      \node[boworange, font=\scriptsize\bfseries, above] at (2.9, 1.45) {Grupo 2: Cocina};
+    \end{tikzpicture}
+  \end{column}
+
+  \begin{column}{0.51\textwidth}
+    \begin{block}{Grupo 1: Documentos A y B}
+      Comparten \textbf{equipo} y \textbf{partido}.\\
+      $\rightarrow$ Mayor proximidad en el subespacio deportivo.
+    \end{block}
+    \smallskip
+    \begin{block}{Grupo 2: Documentos C y D}
+      Comparten \textbf{cocina} y \textbf{prepara}.\\
+      $\rightarrow$ Mayor proximidad en el subespacio culinario.
+    \end{block}
+  \end{column}
+\end{columns}
+
+\medskip
+\centering
+\alert{\textbf{BoW proporciona la representación métrica; el agrupamiento descubre la estructura.}}
+#+end_export
+
+* Lo que se pierde al contar
+
+#+begin_export latex
+\vspace{-0.5em}
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{1. Pérdida de orden y sintaxis}
+      \centering
+      \smallskip
+      \textit{«El \alert{perro} muerde al \alert{hombre}»}\par
+      \textit{«El \alert{hombre} muerde al \alert{perro}»}\par
+      \medskip
+      \small
+      Tras preprocesamiento (sin \textit{stop words}):\\
+      ambas frases tienen el \textbf{mismo multiconjunto}:\\
+      $\{\text{hombre}: 1,\, \text{muerde}: 1,\, \text{perro}: 1\}$\par
+      \smallskip
+      \textbf{\alert{Mismo vector, significados opuestos.}}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{block}{2. Ausencia de semántica léxica}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item \textbf{Sinonimia:} «coche» y «automóvil» son columnas distintas e independientes:
+        $\mathbf{v}_{\text{coche}} \cdot \mathbf{v}_{\text{auto}} = 0$
+        \item \textbf{Polisemia:} «banco» (asiento) y «banco» (dinero) colapsan en la misma dimensión.
+        \item \textbf{Mitigación local:} N-gramas (bigramas) retienen algo de orden, pero multiplican $|V|$.
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+
+\bigskip
+\begin{center}
+  \alert{\textbf{BoW compara vocabulario idéntico, no comprende significados ni relaciones.}}
+\end{center}
+#+end_export
+
+* De BoW al espacio latente
+
+#+begin_export latex
+\vspace{-0.7em}
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{Espacio Explícito (BoW / TF-IDF)}
+      \begin{itemize}\setlength{\itemsep}{0.12em}
+        \item Ejes = palabras literales ($|V|$ dimensiones).
+        \item Representación dispersa e interpretable.
+        \item \textbf{TF-IDF:} pondera frecuencia ($TF$) penalizando palabras ubicuas en el corpus ($IDF$).
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{block}{Espacio Latente (Semántica)}
+      \begin{itemize}\setlength{\itemsep}{0.12em}
+        \item Ejes = conceptos aprendidos ($k \ll |V|$).
+        \item Representación densa y continua.
+        \item Basado en \textbf{co-ocurrencia}: términos en contextos afines quedan próximos.
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+
+\smallskip
+\begin{center}
+  \begin{beamercolorbox}[sep=0.35em,center,rounded=true]{block body}
+    \small
+    \textbf{Matriz Término-Doc}
+    $\xrightarrow{\text{TF-IDF}}$ \textbf{Ponderación}
+    $\xrightarrow{\text{SVD (Truncada)}}$ \textbf{LSA}
+    $\longrightarrow$ \alert{\textbf{Espacio Latente}}
+  \end{beamercolorbox}
+\end{center}
+
+\smallskip
+\centering
+\scriptsize
+\textit{Alternativa neuronal:} Autoencoders y \textit{embeddings} (Word2Vec) aprenden representaciones latentes densas a partir de grandes volúmenes de texto.
+#+end_export
+
+* La idea esencial y aplicaciones
+
+#+begin_export latex
+\vspace{-0.5em}
+\begin{center}
+  \large
+  Texto $\longrightarrow$ Preprocesamiento $\longrightarrow$ Conteo $\longrightarrow$ \alert{Vectores}
+\end{center}
+
+\smallskip
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{block}{Aplicaciones prácticas}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item \textbf{Clasificación de spam:} detectar patrones de términos en correos.
+        \item \textbf{Categorización documental:} asignar noticias a temáticas (política, deporte).
+        \item \textbf{Recuperación de información:} búsqueda rápida por coincidencia léxica.
+      \end{itemize}
+    \end{block}
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{block}{Balance metodológico}
+      \begin{itemize}\setlength{\itemsep}{0.3em}
+        \item \textbf{Fortalezas:} simple, rápido, interpretable y sólida línea base (\textit{baseline}).
+        \item \textbf{Limitaciones:} ignora sintaxis, orden y contexto semántico.
+        \item \textbf{Evolución:} BoW $\rightarrow$ TF-IDF $\rightarrow$ LSA $\rightarrow$ Embeddings / Transformers.
+      \end{itemize}
+    \end{block}
+  \end{column}
+\end{columns}
+
+\bigskip
+\begin{center}
+  \alert{\textbf{Contar palabras es el punto de partida del PLN, no la comprensión de conceptos.}}
+\end{center}
+#+end_export
