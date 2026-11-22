@@ -1,0 +1,930 @@
+Information Sciences Letters
+
+Volume 11                                                                                                Article 24
+Issue 1 Jan. 2022
+
+2022
+
+Customer Churn Prediction in Telecommunication Industry Using
+Deep Learning
+Samah Wael Fujo
+College of Information Technology, Ahlia University, Bahrain, moaiad.khder@asu.edu.bh
+
+Suresh Subramanian
+College of Information Technology, Ahlia University, Bahrain, moaiad.khder@asu.edu.bh
+
+Moaiad Ahmad Khder
+Department of Computer Science, Applied Science University, Bahrain, moaiad.khder@asu.edu.bh
+
+
+
+
+Follow this and additional works at: https://digitalcommons.aaru.edu.jo/isl
+
+
+Recommended Citation
+Wael Fujo, Samah; Subramanian, Suresh; and Ahmad Khder, Moaiad (2022) "Customer Churn Prediction in
+Telecommunication Industry Using Deep Learning," Information Sciences Letters: Vol. 11 : Iss. 1 , PP -.
+Available at: https://digitalcommons.aaru.edu.jo/isl/vol11/iss1/24
+
+
+This Article is brought to you for free and open access by Arab Journals Platform. It has been accepted for
+inclusion in Information Sciences Letters by an authorized editor. The journal is hosted on Digital Commons, an
+Elsevier platform. For more information, please contact rakan@aaru.edu.jo, marah@aaru.edu.jo,
+u.murad@aaru.edu.jo.
+Inf. Sci. Lett. 11, No. 1, 185 – 198 (2022)
+                                                                                          Information Sciences Letters
+                                                                                          An International Journal
+
+                                                                                                    http://dx.doi.org/10.18576/isl/110120
+
+
+
+
+Customer Churn Prediction in Telecommunication Industry
+Using Deep Learning
+Samah Wael Fujo1, Suresh Subramanian1 and Moaiad Ahmad Khder 2,*
+1
+    College of Information Technology, Ahlia University, Bahrain
+2
+    Department of Computer Science, Applied Science University, Bahrain
+Received: 7 May 2021, Revised: 21 Jun. 2021, Accepted: 21 Oct. 2021
+Published online:1 Jan. 2022
+
+Abstract: Without proper analysis and forecasting, industries will find themselves repeatedly churning customers, which
+the telecom industry in particular cannot afford. A predictable model for customers will allow companies to retain current
+customers and to obtain new ones. Deep-BP-ANN implemented in this study using two feature selection methods,
+Variance Thresholding and Lasso Regression, in addition, our model strengthened by early stopping technique to stop
+training at right time and prevent overfitting. We compared the efficiency of minimizing overfitting between dropout and
+activity regularization strategies for two real datasets: IBM Telco and Cell2cell. Different evaluation approaches used:
+Holdout, and 10-fold cross-validation to evaluate the model’s efficiency. To solve unbalanced issue, the Random
+Oversampling technique was used to balance both datasets. The results show that the model implemented performs well
+with lasso regression for feature selection, early stopping technique to pick the epochs, and large numbers of neurons (250)
+into the input and hidden layers, and activity regularization to minimize overfitting for both datasets. In predicting
+customer churn, our findings outperform ML techniques: XG_Boost, Logistic_Regression, Naïve_Bayes, and KNN.
+Moreover, our Deep-BP-ANN model’s accuracy outperforms the existing deep learning techniques that use holdout or 10-
+fold CV for the same datasets.
+Keywords: Deep learning, customer churn, ANN, backpropagation, lasso regression.
+
+
+
+
+1 Introduction                                                        package, with simple connectivity and a range of service
+                                                                      providers [4].
+Telecommunications has long been part of our culture but              Churn describes the consumer who transfers from one
+is attracting more attention now than ever before. Several            supplier of telephone services to another. [5]. The telecom
+scientific journals and corporate publications report                 industry faces a major problem linked to customer turnover,
+exciting technological developments in technology and the             the user who will in the coming years leave their existing
+competition in the mobile telecoms sector. A compelling               relationship with the business/network. This issue can not
+case is GPRS-based medium broadband networks’ rapid                   only impact the company’s rapid growth, but it can also
+growth, which now hit a market penetration level of 70–80             affect revenues. Therefore, many Customer Churn
+percent in many EU countries. Furthermore, long-distance              Prediction (CCP) models have been implemented but do
+changes due to the wireless telecoms industry’s unbundling            not deliver the desired CCP performance; this is due to
+and merging with other companies such as IT and media.                potential variant variables influencing Customer Churn
+[1][2]. Telecommunications providers face rising customer             (CC), which would still be unexplored. [6]. Customer may
+support pressure than ever before delivering the triple play          churn for many reasons: the company does not interact and
+package of Audio, Video, and Internet access services.                communicate with their clients, complaints were not dealt
+Underlying the difficulty of triple play service is the need to       with promptly, negative comments on social media, press,
+provide consumers with a high-quality experience, either              etc., unsatisfied with the services offered, the present
+when they use the service or when they ask for help from              software does not suit needs, the competitor gave the new
+their service provider [3]. Due to its tremendous growth in           product a better quality and price, or not supporting
+recent years, this paper focuses primarily on the telecoms            advanced network types (4G, 5G, 6G). In most cases, the
+industry. Where almost everybody today has a telecom                  company does not aware of the reasons behind the
+
+*Corresponding author e-mail: moaiad.khder@asu.edu.bh
+                                                                                                               © 2022 NSP
+                                                                                                               Natural Sciences Publishing Cor.
+186                                                             S. Fujo et al.: Customer Churn prediction in telecommunication …
+customer’s leaving. In this case, analysing the data can help   Network (CNN) consists of numerous layers of models in
+understand and predict the customer churn to avoid its          which each layer taking inputs from the previous layer,
+occurrence [7].                                                 processes it, and outputs it to the next layer in a daisy-chain
+                                                                fashion [11].
+Model Churn Prediction support evaluating historical
+business data to identify the clients’ list at high risk of     2 Related Work
+churning. It would allow the telecommunications industry
+to concentrate on a particular category rather than on-         [9] presented a technique for using DL models to remove
+individual using retention techniques. Personalized             the manual feature engineering. Three DNN architectures
+retentions are difficult because companies generally have a     were developed, and the respective CCP model was
+large customer base and cannot afford to invest a lot of time   designed utilizing two CrowdAnalytix and Cell2Cell
+and resources. Nevertheless, the possibility of predicting      telecom datasets and compared how they perform with
+which users are at risk of losing, it may minimize customer     other models. Authors show that models of DL work just as
+retention pains by targeting them specifically to those         well as conventional classifiers such as SVM and random
+customers [4]. Today, technology plays a significant role in    forest. [12] used the principle of”Transfer Learning (TL)”
+addressing consumer needs and achieving a degree of             and”Ensemble-based Meta-Classification,” they present a
+satisfaction. It is the business’s fundamental need to          solution to the inherent issues of churn prediction. The
+develop an efficient and productive model for managing          proposed “TL-DeepE” approach is implemented in two
+consumer churn. There have been many modeling methods           steps. By fine-tuning many pre-trained Deep Convolution
+that are used to predict CC in various organizations. [8]       Neural Networks (DCNN), the first stage used TL (CNNs).
+reviewed the total number of papers that used these             Predictions from these DCNNs are appended to the original
+methods, as shown in Figure 1.                                  feature vector in the second stage. Therefore, their
+                                                                experiments are carried out using different CNNs as base
+                                                                classifiers and as a meta-classifier, and GP-AdaBoost. The
+                                                                proposed “TL-DeepE” method’s efficiency is compared
+                                                                with      existing     techniques     for     two     common
+                                                                telecommunications datasets, Orange and Cell2cell, by the
+                                                                use of 10-fold cross-validation. The prediction accuracy
+                                                                obtained was 75.4 percent and 68.2 percent by conducting
+                                                                experiments on Orange and Cell2cell datasets, while the
+                                                                AUC was 0.83 and 0.74, respectively. [13] demonstrated
+                                                                that deep Learning enables multi-stage models to represent
+                                                                the data at multiple abstraction levels. It also reduces the
+                                                                time and effort of feature selection considerably as it
+                                                                automatically creates useful features. Authors have
+                                                                compared various models based on accurate customer
+                                                                churn prediction. The study was carried out on the Telco
+                                                                Churn customer dataset of IBM. Artificial neural network
+                                                                (ANN) model achieved a validation data accuracy of
+             Fig.1: Techniques used to prediction churn.        82.83%, which is better than K-Nearest Neighbours (KNN)
+                                                                conventional approach. The results indicate that the multi-
+However, the number of data became huge compared with           layered “ANN” model with “self-learning” capacities and
+before. The Machine learning (ML) model works well but          tokenism input data performs better than traditional
+not for a massive amount of data. Therefore, in recent years    classification algorithms. [14] suggested a model for the
+the studies, especially for customer churn prediction, tend     CCP that can be considered to assess the parameters’
+to use deep learning (DL) techniques more since they can        efficacy, i.e., the lower and the upper distance between the
+deal with massive data compared with ML techniques.             samples using publicly available datasets. Researchers
+Deeply structured Learning has stood out as a new field of      randomly picked the Naïve Bayes classification algorithm
+study in ML since 2006, or more formally named “deep            as their base-classification. The result of the analysis in this
+learning or hierarchical learning”. DL belongs to a class of    paper shows that “Lower Distance Test Set (LDT)” samples
+“artificial neural networks (ANNs)” that consist of several     had the best performance comparing it with “Upper
+processing layers [9]. The techniques built through Deep        Distance Test sets (UDT).” The reason is that the
+Learning analysis have already affected a wide variety of       classification performance on the upper-distance samples
+signals and data processing work across the traditional and     stays almost the same whenever the test data is increased.
+new, expanded spectrum over the past couple of years,           Authors have investigated that the CCP model performance
+involving ML and AI [10]. In deep Learning, the “deep”          in an unclear state in a dataset is inversing proportion to
+derives from neural networks, typically multiple layers built   accuracy. The authors mention that a future study could
+into deep learning models. The Convolutional Neural
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+Inf. Sci. Lett. 11, No. 1, 185-198 (2022) / http://www.naturalspublishing.com/Journals.asp                                              187
+deliver empirical results with multiple base-classifier on the         RF were selected as ML classifiers. To select the optimal
+balanced dataset. It would be essential to realize the CCP             classifier, classifiers were tested using performance
+model’s impact if the selection method applied to the                  evaluation metrics: precision, accuracy, recall, and error
+features by assigning them weights. Moreover, the studies              rate. The performance shows that LR outperforms
+discussed that more research is detailed with other model              compared to the ANN and RF, based on their analysis. [17]
+types in the future, offering an option to compare this study          proposed a forecast model to classify the characteristics that
+finding and ultimately analyze the effect statistically. [15]          significantly affect consumer churn using ML techniques
+used a Deep Learning Method to illustrate churn prediction             such as “K-nearest-neighbour (KNN)”, XG Boost, and RF.
+on a Telco dataset. To construct a nonlinear classifier, a             To estimate the churn, “IBM Watson” data was analysed.
+multi-layered NN was developed. The CP model operates                  Eventually, ML performed a comparative analysis to
+on customer attributes, attributes of assistance, attributes of        determine the best algorithm with the highest accuracy.
+use, and relative attributes. The capacity for turnover as
+                                                                       Experimental tests reveal that the XGBoost classification
+well as the deciding variables are predicted. The qualified
+                                                                       provides 0.798, which is better accuracies than the KNN
+model then assigns the final weights to these attributes and
+                                                                       and RF classifications. The “XGBoost” classifier is then
+calculates the probability of churn for that client. It
+                                                                       used for the collection of features in a proposed framework.
+achieved an accuracy of 80.03 percent. Since the model can
+                                                                       The model presented indicates that Fiber Optic users with a
+include the churn variables, businesses can use it to
+                                                                       higher monthly charge are more influenced for churn
+evaluate and take measures to remove the reasons for such
+factors.                                                               3 Method
+[16] applied their study to identify the factors affecting
+customer churn and build an effective model of churn                   The proposed system is implemented based on a supervised
+prediction and provide the best interpretation of the results          classification deep learning technique to predict if the
+of data visualization. Kaggle’s open data website has                  customer is going to churn or not in the telecom industry
+compiled the dataset. The proposed method for churn                    [18], [19], and [20]. Beside implemented the most common
+prediction analysis covers several phases: pre-processing of           four ML technique LR, NB, KNN, XGBoost in CCP [21],
+data, analysis, implementation of ML algorithms, classifier            [14], [20], [22], [13], [17], [16], to compare our proposed
+evaluation, and selecting the best one for CP. Three main              model with them. The proposed system process is shown in
+actions, cleaning, transformation, and selection of features,          Figure 2.
+involved the data pre-processing process. LR, ANN, and
+
+
+
+
+                                                  Fig.2: Proposed system processes.
+
+
+
+                                                                                                           © 2022 NSP
+                                                                                                           Natural Sciences Publishing Cor.
+188                                                                 S. Fujo et al.: Customer Churn prediction in telecommunication …
+The method includes six main phases: data collection, data          3.2 Pre-processing
+pre-processing, feature engineering, random oversampling,
+modeling, and evaluation. The two most suitable datasets to         One of the main stages of information discovery activities
+predict customer churn has been selected. Pre-processing            is data pre-processing, which plays a significant role. It
+has been implemented on both datasets that include the              requires a variety of steps, such as the transformation of
+Exploratory Data Analysis EDA to understand the given               data and the reduction of data. If raw data is converted into
+datasets and data transformation to pre-process the data.           low-quality data, learning algorithms’ efficiency and
+Two different feature selection techniques have been                accuracy will be compromised. Thus, the collected data can
+selected to experiment with the performance improvement:            be correctly analyzed by performing proper data pre-
+Lasso Regularisation and Removing Highly Correlated                 processing steps and choosing suitable learning algorithms
+features (Variance Thresholding) methods. After that, to            [27].
+handle the imbalanced problem in both data sets, random-
+oversampling technique was used. Then Deep-BP-ANN                   Telecom datasets have several issues to address, such as
+model was implemented by setting different hyper                    missing values, non-numeric features, inconsistent scales of
+parameters includes Early Stopping to monitor the                   features, etc. Therefore, before implementing a learning
+generalization error, Model Checkpoint call-back to save            model, it is important to pre-process the data [12]. There
+the best performance obtained during training. Also,                are specific and common characteristics of the datasets
+Activity Regularization has been used to avoid overfitting          used, namely (Cell2cell and IBM Telco) as shown in Table
+that may cause by random oversampling. The model                    1.
+evaluates the data by using two methods: holdout and K-             In this research, both data sets (cell2cell and IBM Telco)
+fold cross validation. Finally, the model performance               are pre-processed using almost the same strategies. The
+evaluation was measured using confusion metrics to                  pre-processing phase includes handling the missing data,
+calculate: F1-Score, Precision, Recall, Accuracy, and AUC.          encoding the categorical variables using two methods:
+3.1 Dataset                                                         “label encoding” and “one-hot encoding”. Moreover,
+                                                                    scaling the high variance values using the normalization
+                                                                    technique and dropping the unnecessary features that do not
+The data used in this study is the Cell2Cell dataset consists
+                                                                    affect the dependent variable. After that, some of the EDA
+of 71,047 instances and 58 attributes. The Cell2Cell dataset
+                                                                    has applied to get a better understand of the given data. The
+have been used by many researchers [9],[23],[12],[24],[12],
+                                                                    EDA shows that both datasets are imbalanced, and to deal
+and [25]. The data is available at the “Centre for Customer
+                                                                    with this kind of issue, we used the random oversampling
+Relationship Management Duke University’s” website [26],
+                                                                    technique.
+and it is available in Kaggle [12]. The other data set used in
+the research is IBM Telco. The dataset consists of different        1) Missing Data
+attributes relating to a telecommunications company’s
+                                                                    Missing data influences statistical analysis through
+customer, which enabled us to deduce a coherent
+                                                                    knowledge loss and data pattern irregularities [28].
+relationship between the customer’s actions and the churn.
+There are 21 attributes and 7044 rows in the dataset, and it        Since both data sets (Cell2cell and IBM Telco) contain
+is available in Kaggle. The IBM Telco data set has been             missing values, it is important to know the percentage of
+used by many researchers to predict customer churn [13],            missing values and where they are located. Starting with the
+[14], [15], [16], [17]. Both datasets have the dependent            IBM Telco data set, the total charges contain missing
+attribute, which is (churn) that shows whether or not the           values of about 0.16%, which is less than 30%. The
+customer has churned, indicated by (Yes) or (No),                   Cell2Cell dataset contains fourteen features with numeric
+respectively. Furthermore, both datasets have divided the           types have missing values with different proportions but
+attributes into two categorical features within an object type      still less than 30%.
+and continuous features within the numeric type. Table 1
+shows the characteristics Cell2Cell and IBM Telco datasets.         [29], [30] mentioned that when the missing values are over
+                                                                    the threshold of 30%, it is better to remove them; otherwise,
+                    Table 1: Characteristics of datasets.           take the residual mean for the numeral value and most
+                                      Cell2Cell         IBM Telco   frequent for categorical values. Therefore, missing data in
+Total of features                         58              21        both data sets are handled by using the simple imputer
+Total of customers                      51047            7043       technique by using Python’s Sklearn library. Simple
+Missing value                            Yes             Yes        Imputer is used to impute or replace incomplete continuous
+Churn                                   28.8%           26.5%       and categorical variables with various means, median, most
+Not churn                               71.2%           73.5%
+                                                                    frequent, and constant value [31].
+Data distribution                     Imbalanced      Imbalanced
+Categorical features                      23              17        [29], [30], filled the missing values of more than 30% with
+Numerical features                        35               4        the residual mean, and [9] use the forward filling technique
+Dependent feature                          1               1        to fill the missing values with more than 95% by the mean.
+Independent features                      57              20
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+Inf. Sci. Lett. 11, No. 1, 185-198 (2022) / http://www.naturalspublishing.com/Journals.asp                                             189
+[28] omitted characteristics with a missing value percentage           otherwise, they cause over rescaling when categorical
+greater than 0.90.                                                     features are already encoded.
+In our datasets, the missing values occur on the numeric               There are many other techniques to rescale the values, such
+variables, and they are less than 30%, so the best strategy to         as standardization and binarization, but normalization
+deal with them is to fill the null with each particular                shows the best performance results after some experiments.
+feature’s mean.                                                        Furthermore, several researchers applied this technique in
+                                                                       their data to rescale it [29], [12], [34].
+2. Data transformation
+                                                                       3. Resampling the datasets
+Data transformation techniques can greatly improve the
+churn prediction’s overall performance [16]. Three                     Imbalanced classification is one of the predictive modelling
+different data transformation methods have been applied on             classification problems which is used in this research. An
+IBM Telco and Cell2cell data sets: Label encoding, One hot             imbalance happens when, relative to the other classes, one
+encoding, and Normalization.                                           or more classes have meager proportions in the training
+                                                                       results. In our case, the churn class has very low
+Label Encoding (LE): is a basic technique used to map
+                                                                       proportions compared with the not churn class. For
+categories as continuous integers in nominal attributes. It is
+                                                                       example, customers’ features have 80 instances of
+accepted by several data transformation tools, such as
+                                                                       customers not churned and 20 instances of churn
+Labe-encoder, because of its simplicity “program package
+                                                                       customers, and our training dataset contains only these
+from scikit-learn in Python” [27]. LE technique is more
+                                                                       instances. This reflects an instance of an imbalanced
+useful with categorical variables that contain only two
+                                                                       problem of classification. Class imbalance adds critical
+unique values, such as (yes or no) and (male or female).
+                                                                       challenges to the CCP [35], [36], [37].
+IBM Telco data set contains six categorical variables with
+                                                                       [38] mentioned that “Any dataset with an unequal class
+two unique values, which are gender, partner, dependents,
+                                                                       distribution is technically imbalanced. However, a dataset
+phone service, paperless billing, and churn. These features
+                                                                       is imbalanced when there is a significant, or in some cases
+encoded using LE technique where yes replaced by one and
+                                                                       extreme, disproportion among the number of examples of
+no replaced by zero and gender male replaced by one and
+                                                                       each class of the problem”.
+female replaced by zero. Cell2cell data set contains fifteen
+features with yes/no these features encoded using LE                   Therefore, it has been found that Cell2cell and IBM Telco
+technique as did in IBM Telco. The homeownership feature               datasets were unbalanced since the percentage of the
+is also encoded using the LE technique (known) replaced                second (minority) class representing churn customers is
+by one and (unknown) replaced by zero.                                 about 28.8% in Cell2cell and 26.5% in IBM Telco’s whole
+                                                                       dataset.
+One-Hot Encoding (OHE) (or Dummy): is a commonly
+used approach based on a binary encoding that uses a 1 to              In order to tackle this problem, several solutions have been
+denote a group’s presence and a 0 to denote its absence. It            provided. By resampling the existing, unbalanced data
+transforms each category into an N-dimensional vector with             collection, data-level solutions aim to re-balance the class
+an element of (0 or 1) in the nominal attribute containing N           distribution. Data-level solutions, consisting of several
+categories. This technique does not harm the raw                       different resampling techniques, are among the most
+information. However, some issues with the OHE                         common solutions for the imbalanced issue. “Random
+transforms, such as “sparse data” and “high                            oversampling (ROS) and Random under-sampling (RUS)”
+dimensionality,” will increase learning algorithms’                    are given by random sampling techniques [36], [35], [39].
+computational time. Therefore, OneHot should not be used
+                                                                       By randomly reproducing the minority instances from the
+for high cardinality columns [27].
+                                                                       current data set, ROS attempts to rebalance the class
+High cardinality means many unique values (a large k). An              distribution in the original data set. On the other hand, Via
+example of a high cardinality function is a column with                the random deletion of majority class instances, RUS seeks
+customer identification and service area characteristics.              to balance the class distribution. ROS and RUS are flexible
+Therefore, high cardinality triggers high dimensionality,              to use and comprehend their strategies. However, RUS will
+indicating a multi-dimensional matrix [32]. Hence, these               discard potentially valuable data instances, while by
+two columns would be dropped before the OHE method is                  making exact copies of current instances, ROS can increase
+implemented.                                                           overfitting [35], [45].
+Normalization: the two datasets were normalized to                     In this study, the ROS has been chosen because its
+improve the results on customer prediction with ML                     drawback can be overcome using the Activity
+methods. One of the most common normalization methods                  Regularization technique in our Deep-BP-ANN model.
+is MinMaxScaler. “MinMaxScaler” scales and translates                  ROS improves performance in terms of accuracy, recall,
+each feature individually by rescaling variables into the              precision, and F1-score in both datasets compared with
+range (0,1) [33] [29]. The MinMax Scaler is applied only               other studies.
+on the high variance features, not the entire data set;
+                                                                                                          © 2022 NSP
+                                                                                                          Natural Sciences Publishing Cor.
+190                                                                    S. Fujo et al.: Customer Churn prediction in telecommunication …
+4. Feature selection                                                   These optimal options work well for both data sets: IBM
+                                                                       Telco and Cell2cell.
+A selection of features typically used in the pre-stage of
+ML, which refers to the selection process of a subset of               When dealing with binary classification problems as
+specific features of a set of features [16]. In this study, the        customer prediction, the best activation function to use in
+correlation Matrix has been used to visualize how each                 the input layer and hidden layers is Rectified Linear
+variable correlates with the other variables. The feature that         (ReLU) activation function and the sigmoid activation
+is above 0.5 or equal were be excluded from the data set               function in the output layer [29], [47], [48].
+using variance Thresholding method. Another feature
+                                                                       The selecting number of training epochs one of the biggest
+selection method used in this study is lasso regression
+                                                                       challenges with training neural networks. Many epochs will
+which is one of the most prevalent embedded feature
+                                                                       contribute to the training dataset overfitting, whereas too
+selection approaches [40].
+                                                                       few will result in an under fit model. Early stopping is a
+“Lasso Regression” has the potential to nullify the                    technique that allows to assign a large number of epochs
+influence of an irrelevant variable in the data, which means           randomly and stop training once the model performance on
+that it will fully remove the coefficient of a variable to zero        a validation dataset stops from improving [49].
+and thus is better at decreasing the variance whenever the
+                                                                       The early stopping call-back technique is used in recent
+data consists of several insignificant features.
+                                                                       research for different problems when building the deep
+Mathematically, Lasso is = Square Residual Sum + λ *
+                                                                       learning model [50],[51],[52],[12]. Nevertheless, no
+(“Sum of the absolute value of the magnitude of
+                                                                       research applied this technique when predicting customer
+coefficients”) [41] [42].
+                                                                       churn in the telecom industry using deep learning.
+    Lasso:            ∑!"#$( 𝑦" − ∑% 𝑥"% 𝛽% )& + λ ∑𝑝𝑗=1 |𝛽𝑗 |   (1)   To compile the model and optimize the weights, Adam, the
+Where λ a sum of shrinkage. λ = 0 It means that all                    backpropagation DL optimization algorithm, was selected,
+attributes are taken into account and is equal to a linear             which can measure adaptive learning rates for each
+regression where only squares residual sum is assumed to               parameter as the “gradient descent optimization algorithms”
+construct a predictive model. λ = ∞ no attribute is taken              of the ANN model. Simultaneously, binary “cross-entropy”
+into account, i.e., (as λ closes to infinity). The bias                was used as an objective function to minimize the loss
+increases with an increase in λ, and variance increases with           function during model training.
+a decrease in λ.                                                       The activity regularization method has been used to reduce
+5. Exploratory data analysis (EDA)                                     Deep-BP-ANN overfitting on predicting a binary
+                                                                       classification problem (customer churn) [45].
+One of the most important challenges in developing the
+mobile telecoms service industry is retaining clients. The             5 Model Validation
+EDA enables a service provider to track the product service
+that influences the client to churn and suggest or facilitate          The most significant aspect of developing a supervised
+the best service or strategy to attract and retain the customer        model is model validation. One must have sensible data
+[43], [16].                                                            separating strategy to construct a model with excellent
+                                                                       generalization efficiency, which is essential for model
+The technique used to find out the top ten important                   validation [53]. Two common methods for validation are
+features to predict customer churn in both data sets is the            used Hold out (90% for training and 10% testing) and 10-
+XGBoost. An advantage of using XG Boost is that it is                  Fold CV.
+relatively easy to retrieve important scores for each
+attribute after the boosted trees are created. In general,             6 Evaluation
+significance offers a score that shows how useful or
+important each feature was within the model in constructing            Most studies using AUC and Accuracy to evaluate their
+the boosted decision trees. The more an attribute is used              model in CCP. Thus, this study used the confusion matrix
+with decision trees to make key decisions, the greater its             to evaluate the implemented model and AUC metric. The
+relative value. Attributes in the dataset, this value is               accuracy, Recall, F1-Score, and precision can be obtained
+determined directly, allowing attributes to be ranked and              from the confusion matrix as shown in Table 2.
+compared to each other. The feature’s significance is then
+averaged over all decision trees within the model [44], [45].                           Table 1: Confusion Matrix
+
+4 Deep-Bp-Ann Model                                                                                         ACTUAL
+                                                                                                             Churn         not-churn
+After several experiments, the optimal number of neurons                PREDICTED            Churn            TP              FN
+is 250 neurons for input and hidden layers. Besides, the                                    Not-Churn         FP              TN
+optimal number of hidden layers were two hidden layers.
+
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+Inf. Sci. Lett. 11, No. 1, 185-198 (2022) / http://www.naturalspublishing.com/Journals.asp                                                191
+These metrics are suitable for analysing any model built               are churned, as shown in Figure 4. The results mean that
+using balanced and unbalanced datasets [9].                            this is an imbalanced classification problem. ML and DL
+                                                                       algorithms work well only if the number of records of each
+The following explains how each term described in our
+                                                                       class is approximately equal, as mentioned earlier.
+model:
+                                                                       Therefore, both datasets are skewed; this issue can be
+     1.   A customer who is churning (positive) and                    handled in several ways; in this research, the ROS
+          classified as churn (positive) is called “true               technique has been used to handle the imbalanced issue.
+          positive (TP)”.
+     2.   A customer who is not churning (negative) and
+          classified as not churning (negative) is called true
+          “negative (TN)”.
+     3.   A customer who is not churning (negative) and
+          classified as churn (positive) is called “false
+          positive (FP)”.
+     4.   A customer who is churning (positive) and
+          classified as not churning (negative) called “false
+          negative (FN)”.
+                                                                                       Fig. 3: Churn rate in IBM Telco
+Accuracy computes the percentage of customers who are
+correctly churned or not churned.
+                         +,-+.
+Accuracy:                                                      (2)
+                    +, - +. - /, - /.
+
+Precision the percentage of TP to the sum of TP and FP is
+knowing as precision.
+                       +,
+Precision:                                                 (3)
+                    +,- /,
+Recall focuses on the number of FN thrown into a
+prediction mixture. The recall is also known as sensitivity
+or true positive rate, and it is calculated as the following:
+                                                                                        Fig. 4: Churn rate in cell2cell
+                       +,
+Recall:                                               (4)              The top ten influencing features to the churn using lasso
+                    +,- /.
+The F1-score becomes one only if both “precision and                   regularization for feature selection and XG Boost for
+recall” are 1. Furthermore, since both “precision and                  feature importance techniques in IBM Telco and Cell2cell
+recall” are high, then the F1 score is raised. The harmonic            are shown in Figure 5 and Figure 6. The level of
+mean of (precision and recall) is the F1-score (Krishnan,              importance is different based on the f score. The highest
+2020).                                                                 influencing features with the highest f score, the total
+                                                                       charge is the highest importance following by tenure, in
+                     ,01234356 × 8129:: × &                            IBM Telco. Whereas, in Cell2cell, PercChangeMinutes,
+F1-Score:              ,01234356 - 8129::
+                                                         (5)
+                                                                       and PerChangeRevenues is the highest significant features
+The AUC evaluation metric is also used to measure the                  to the churn.
+efficiency and performance of a binary Classifier. The
+AUC provides a more powerful evaluation metric than
+other evaluation metrics, which measures a supervised
+classification’s overall performance by considering all
+potential cut-off points on the receiver’s operating features
+curve [47].
+
+7 Result
+A preliminary look at the overall churn rate on both data
+sets shows that in IBM Telco, 73.5% of the customers are
+not churning still belong to the company, and 26.5% are
+churned, as shown in Figure 3. Whereas in Cell2cell, the
+number of not churned customers is 71.2%, while 28.8%                         Fig.5: Top 10 influencing features in Cell2cell.
+                                                                                                             © 2022 NSP
+                                                                                                             Natural Sciences Publishing Cor.
+192                                                           S. Fujo et al.: Customer Churn prediction in telecommunication …
+
+
+
+
+                                                              Fig.8: The Evaluation Performance using Holdout in
+                                                              Cell2cell Telco.
+        Fig. 6: Top 10 influencing features in IBM Telco.     The result shows that Lasso Regression greatly affects the
+                                                              Cell2cell data set since some features are irrelevant to the
+The results show that the classification from the learned     response variable. The improvement has been noticed for
+Deep-BP-ANN has been improved. Moreover, the Deep-            Deep-BP-ANN and XG-Boost models. However, still
+BP-ANN is the best in classifying the churn and not churn     Deep-BP-ANN model outperforms XG Boost and other
+customers, followed by XG Boost. The Deep-BP-ANN              classifiers. The Deep-BP-ANN model achieved the best
+classified (430) customers with a rate of 41.55% as True-     accuracy with a hold-out evaluation, 79.38% for Cell2cell
+negative and (482) 46.57% as True-positive. While XG          and Precision 74.5%, Recall 89.32%, F1-Score 81.24%,
+Boost classified (411) with a rate of 39.71% as True-         and AUC 79.38%.
+negative, and (477) with a rate of 46.09% as True-positive.
+                                                              The last experiment applied 10-fold cross-validation to
+The results show that the best classification results were    evaluate the model obtained from the previous hold-out
+obtained by Deep-BP-ANN, followed by XG Boost                 method by using Lasso Regression, 250 neurons, 32 batch
+obtained from IBM Telco. The Deep-BP-ANN classified           size, 214 epochs (based on the nearest point obtained early
+(2523) customers with 34.71% as True-negative and (3246)      stopping technique), and Activity Regularization.
+customers with a rate of 44.66% as True-positive. At the
+same time, XG Boost classified (2506) customers with a        The best classification results obtained by Deep-BP-ANN
+rate of 34.48% as True-negative and (2727) customers with     followed by XG Boost. The model able to classified (4082)
+a rate of 37.52% as True-positive.                            customers with a rate of 39.45% as True-negative.
+                                                              Moreover, the model able to classified (4786) customers
+The evaluation performance of our model for IBM Telco is      46.25% as True-positive.
+shown in Figure 7. Our model outperforms XG Boost on its
+results in ACC, Recall, Precision, F1-Score, and AUC. The     The 10-fold cross-validation is also applied to the Cell2cell
+Deep-BP-ANN model achieved the best accuracy by a             data set to evaluate the last experiment’s model results that
+hold-out evaluation of 88.12% for IBM Telco and Precision     used the hold-out method. The results show that Deep-BP-
+84.71%, Recall 93.04%, F1-Score 88.68%, and AUC               ANN can classify 29.03% as True-negative and can classify
+88.12%. The results of the evaluation performance in          44.87% as true positive.
+Cell2cell using holdout methods are shown in Figure 8.        The obtained classification results from Deep-BP-ANN is
+                                                              outperformed XG Boost, LR, NB, and KNN machine
+                                                              learning models. Therefore, our model can classify
+                                                              customer churn for both data sets better than other machine
+                                                              learning classifiers. However, to ensure that our model
+                                                              works better than other deep learning techniques for both
+                                                              datasets, the comparison between our model results and
+                                                              other studies’ results have been shown in the dissection.
+                                                              The evaluation performance of the Deep-BP-ANN using
+                                                              10-fold CV is shown in Figure 9. The results show that the
+                                                              best performance achieved by Deep-BP-ANN followed by
+                                                              XG Boost. The best ACC with a 10-fold CV evaluation
+                                                              achieved by Deep-BP-ANN, 86.57% for IBM Telco and
+Fig. 7: The Evaluation Performance using Holdout in IBM       Precision 81.59%, Recall 94.45%, F1-Score 87.55%, and
+Telco.                                                        AUC 86.57%.
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+Inf. Sci. Lett. 11, No. 1, 185-198 (2022) / http://www.naturalspublishing.com/Journals.asp                                               193
+
+                                                                       8 Discussion
+
+                                                                       The summary of the two last experiments results obtained
+                                                                       by Deep-BP-ANN by two different evaluation methods
+                                                                       (Simple holdout and 10-fold CV) for both datasets is shown
+                                                                       in Table 3.
+                                                                       The results show that the holdout method outperforms the
+                                                                       10-fold CV method because the holdout method is applied
+                                                                       with the early stopping technique. Each time the model is
+                                                                       training, it will stop training at the perfect time with the
+Fig. 9: The Evaluation Performance with Lasso Regression               best test validation results. In contrast, in the 10-fold CV,
+                 in IMB Telco (10-fold)                                although the number of epochs selected based on the
+On the other hand, the evaluation performance of the 10-               nearest point chosen by early stopping technique when
+fold CV for Cell2cell in this experiment is shown in Figure            applied on holdout, these epochs are constant for the entire
+10.                                                                    10-fold, which means the model may not stop at the right
+                                                                       time for each running and may lead to giving results that
+                                                                       not the best. However, the early stopping technique can be
+                                                                       applied with the 10-fold CV which will be applied in the
+                                                                       future work. Nevertheless, the Deep-BP-ANN model
+                                                                       results, either by Holdout or 10-fold CV, outperform the
+                                                                       other research studies, and the evidence is shown below in
+                                                                       Table 3.The results show that the holdout method
+                                                                       outperforms the 10-fold CV method because the holdout
+                                                                       method is applied with the early stopping technique. Each
+                                                                       time the model is training, it will stop training at the perfect
+                                                                       time with the best test validation results. In contrast, in the
+                                                                       10-fold CV, although the number of epochs selected based
+      Fig. 10: The Evaluation Performance with Lasso
+              Regression in Cell2cell (10-fold)                        on the nearest point chosen by early stopping technique
+                                                                       when applied on holdout, these epochs are constant for the
+The results show that a great improvement is achieved by               entire 10-fold, which means the model may not stop at the
+10-fold CV for the Cell2cell dataset compared with current
+                                                                       right time for each running and may lead to giving results
+studies that applied deep learning on the Cell2cell dataset.
+The results show that the ACC achieved by Deep-BP-ANN                  that not the best. However, the early stopping technique can
+is 73.09%. These improvements are achieved after applied               be applied with the 10-fold CV which will be applied in the
+the Lasso Regression technique for feature selection,                  future work. Nevertheless, the Deep-BP-ANN model
+increased neurons by 218 new neurons since it was 32, and              results, either by Holdout or 10-fold CV, outperform the
+select the nearest numbers of epochs achieved by the Early             other research studies, and the evidence is shown below in
+Stopping technique, which is 214.                                      Table 3.
+
+
+            Table 2. The hold-out and cross-validation results obtain from Deep-BP-ANN in (IBM Telco and Cell2cell)
+                                  Deep-BP-ANN results obtained from             Deep-BP-ANN results obtained from
+                                  Holdout and 10-fold CV (IBM Telco)            Holdout and 10-fold CV (Cell2cell)
+                                  Simple Holdout          10-fold CV              Simple Holdout         10-fold CV
+                   Accuracy           88.12%                86.57%                    79.38%               73.90%
+                   Precision          84.71%                81.59%                    74.50%               68.15%
+                    Recall            93.05%                94.45%                    89.32%               89.74%
+                   F1-Score           88.68%                87.55%                    81.24%               77.47%
+                     AUC              88.11%                86.57%                    79.38%               73.90%
+
+
+The implemented Deep-BP-ANN model is compared with                     learning techniques. Table 4 summarize the recent studies
+the other studies that used the same dataset and deep                  with their achieved accuracy results that used the same
+
+                                                                                                            © 2022 NSP
+                                                                                                            Natural Sciences Publishing Cor.
+194                                                                     S. Fujo et al.: Customer Churn prediction in telecommunication …
+dataset, either IBM Telco or Cell2cell, with deep learning dataset, and three of them worked with the IBM Telco
+techniques. The summary table shows that out of thirty dataset. Therefore, these studies are used to compare our
+studies about the CCP, five of them are compatible with our model results with them since our contribution is to
+study, which used the same data set and deep learning overcome deep learning techniques used to PCC in terms of
+techniques. Two of these studies worked with the Cell2cell accuracy.
+                                  Table 3. Summary of Compatible studies with our study
+NO        AUTHORS & YEAR                   DATASET      CLASSIFIERS            EVALUATION METHOD                    ACCURACY
+1         (Umayaparvathi  &                Cell2cell    CNN                    10-fold CV                           CNN and FNN –
+          Iyakutti, 2017)                               LFNN                                                        71.66%
+2         (U. Ahmed et al., 2019)          Cell2cell    Transfer Learning      10-fold CV                           68.2%
+                                                        + CNN
+                                                        (TL+CNN)
+3         (Momin et al., 2020)             IBM Telco    ANN                    Simple holdout 10% for testing       82.83%
+                                                                               and 90% for training
+4         (Agrawal et al., 2018)           IBM Telco    multi-layered          Simple Holdout 80% for               80.03%
+                                                        ANN                    training and 20% for testing.
+5         (Mohammad NI et al.,             IBM Telco    ANN                    Simple Holdout 70% for               85.55%
+          2019)                                                                training and 30% for testing.
+Table 5 shows a comparison between existing deep learning               and
+models and implemented Deep-BP-ANN model for the
+                                                                        orange datasets. Their obtained ACC result for Cell2cell is
+Cell2cell dataset. The results show that our model
+                                                                        68.2%, while our model ACC is 73.90% using the same
+outperforms CNN and FFN that implemented by [9]. The
+                                                                        evaluation method (10-fold CV). The implemented model
+implemented Deep-BP-ANN predicted customer churn
+                                                                        outperforms the accuracy of this study with a rate of
+with ACC of 73.90%, which over their model by (2.24%)
+                                                                        (5.52%). Moreover, [9] and [12] applied only the cross-
+using the same evaluation method (10-fold CV). In another
+                                                                        validation method to evaluate the model while our model
+study, [12] used transfer learning and CNN on the Cell2cel
+                                                                        applied two evaluation methods (Holdout and 10-fold CV).
+                              Table 4. The Comparison between Our Model and Other Studies for Cell2cell Dataset
+                                                      Existing Model ACC           Implemented model ACC
+                           Study Authors           Holdout        10-fold CV        Holdout    10-fold CV
+                    (Umayaparvathi & Iyakutti, 2017)
+                                                 Not applied CNN: 71.66%             79.38%     73.90%
+                                                               LFNN: 71.66%
+            (Ahmed et al., 2019)                 Not applied TL+CNN: 68.2%           79.38%     73.90%
+Table 6 compares existing deep learning models’ accuracy ANN model, which achieved an accuracy of 82.83%, while
+and our model results with the IBM Telco dataset. The our model achieved an accuracy of 88.12% using the same
+results show that three different recent studies used ANN evaluation method (Holdout).
+deep learning to predict customer churn. [13] develop an
+                                  Table 5. The recent studies used deep learning to PCC
+                                                Existing Model ACC        Implemented model ACC
+                       Study Authors            Holdout     10-fold CV     Holdout       10-fold CV
+                  (Momin et al., 2020)        ANN: 82.83% Not applied      88.12%         86.57%
+                  (Agrawal et al., 2018)      ANN: 80.03% Not applied      88.12%         86.57%
+                  (Mohammad et al., 2019) ANN: 85.55% Not applied          88.12%         86.57%
+The implemented Deep-BP-ANN outperforms the accuracy their study and achieved a good accuracy result, which is
+of ANN that was implemented by [13] with a rate of 85.55%, but still, our model accuracy result outperforms
+(5.29%) using holdout and with a rate of (3.74%) using 10- their result by a rate of (2.57%) using the same evaluation
+fold CV. Another study used ANN by [15] achieved an method (holdout). Moreover, the implemented Deep-BP-
+accuracy of 80.03%, while our model over their accuracy ANN model outperforms their result with a rate of (1.02%)
+by (8.09%) using the same evaluation method (holdout). using 10-fold CV, and their study not applied this
+Also, the implemented model outperforms their accuracy evaluation method.
+results using 10-fold CV by (6.54%). [16] applied ANN in
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+Inf. Sci. Lett. 11, No. 1, 185-198 (2022) / http://www.naturalspublishing.com/Journals.asp                                             195
+
+9 Conclusion                                                           technique is used to reduce the overfitting that may happen
+                                                                       because of the ROS. The results show effective
+Customer churn is a critical issue that needs to be analysed           performance by the Deep-BP-ANN model in ACC, Recall,
+and predict churn before it occurs to help companies,                  Precision, and F1-Score obtained with these techniques.
+especially in the telecom industry to avoid the reasons that           Moreover, the tuning parameters of the implemented model
+cause the churn. Thus, the company will retain its                     have a strong impact on improving the performance, such
+customers and attract new ones since it has a good                     as increase the number of neurons, minimize the number of
+reputation obtained from loyal customers. Therefore, a                 hidden layers, select an appropriate batch size, and the
+model that can predict customer churn and deal with a huge             number of epochs. These parameters can be tuned with
+amount of data is significant.                                         multiple trials to achieve the best selections except the
+Today, companies deal with billions of data that cannot be             number of epochs. To select the best number of epochs, the
+handled by machine learning, so deep learning techniques               early stopping technique has been used, which can stop
+are essential. Most of the current studies recognized how              training after a particular number of epochs under the
+important customer churns predicting models are,                       condition of obtaining the best test validation results.
+especially in the telecom industry. Many researches have               The proposed model achieved the best results within 250
+been starting applying deep learning algorithms to build a             neurons, one hidden layer including input and output layers,
+model that can predict customer churn accurately.                      32 batch size, and 4000 epochs. The early stopping
+However, there is still a gap in the existing models that              technique almost stops with approximately 211 to 214
+used deep learning techniques since their accuracy needs to            epochs for both datasets.
+be improved. Herein lies the importance of our research in
+implementing a deep learning model that can predict                    Deep-BP-ANN has obtained the best results for IBM Telco
+customer churn with high accuracy compared with existing               using the holdout method with an accuracy of 88.12%,
+models and deal with a huge amount of data.                            Precision 84.71%, Recall 93.05%, F1-Score 88.68%, and
+                                                                       AUC 88.11%. On the other hand, using 10-fold CV, the
+In this study, the Deep-BP-ANN model has been                          best performance achieved by Deep-BP-ANN too, where
+implemented to predict customer churn and compared its                 ACC is 86.57%, Precision 81.59%, Recall 94.45%, F1-
+performance with four states of art machine learning                   Score 87.55%, and AUC 86.57%. Moreover, the Deep-BP-
+techniques: XG Boost, LR, NB, and KNN. Moreover, the                   ANN model also achieved the best performance for the
+obtained accuracy compared with other studies that used                Cell2cell dataset. The highest ACC using hold out method
+deep learning techniques. Experiments were conducted                   is 79.38%, Precision 74.50%, Recall 89.32%, F1-score
+using two real-world datasets IBM Telco (7043 customers)               81.24%, and AUC 79.38%. The 10-fold CV method also
+and Cell2Cell (51047 customers). Experiments results                   gives the best performance by Deep-BP-ANN with an ACC
+showed that the implemented Deep-BP-ANN outperforms                    of 73.90%, Precision 68.15%, Recall 89.74%, 77.47%, and
+the ACC, Precision, Recall, and F1-Score machine learning              AUC 73.90%.
+classifiers. Furthermore, our model outperforms the other
+studies that used the deep learning techniques in terms of             The obtained results either for IBM Telco or Cell2Cell
+the accuracy for both datasets.                                        dataset and either using holdout or cross-validation are the
+                                                                       best compared with the other existing studies that used deep
+The Lasso regularization has been used as a feature                    learning techniques such as CNN, LFNN, and ANN.
+selection technique to delete non-important attributes from
+the datasets. This technique provides great benefits when              10 Recommendation
+the datasets contain a large number of features. In our
+model, the Lasso regression technique greatly impacts the              In general, IBM Telco achieved an accuracy higher than the
+performance, especially for the Cell2cell dataset, since it            Cell2cell dataset, although the IBM Telco has fewer
+contains more features than IBM Telco.                                 records than Cell2cell, and it commonly known that deep
+                                                                       learning works well with a large amount of data. IBM
+One advantage of using sets of decision tree techniques
+                                                                       Telco contains more significant features related to the
+such as “gradient boosting” is that the trained predictive
+                                                                       customer churn than the features in the Cell2cell dataset.
+model can accurately estimate the features’ importance. In
+this study, the XG Boost algorithm has been used to                    Most researches select the Cell2cell dataset when they work
+identify which features have impacted the churn prediction.            with deep learning because it contains many records
+The results show that the most significant features that               compared with other available datasets. Before depending
+impact the CCP are total charge, tenure (the number of                 on a large amount of data, the researchers must know that
+months the customers have stayed with the company), the                deep learning works well with data sets that contain
+percentage change in minutes of use, and the percentage                significant features to the target. Due to that, this study
+change in revenues.                                                    recommend that researches to apply feature importance
+                                                                       techniques such as XG Boost as we did earlier and visualize
+In this study, the ROS technique has been applied to
+                                                                       the data based on the dependent and independent variables
+balance both datasets, and the Activity regularization
+                                                                                                          © 2022 NSP
+                                                                                                          Natural Sciences Publishing Cor.
+196                                                             S. Fujo et al.: Customer Churn prediction in telecommunication …
+to decide which data set contains more significant and
+                                                                Competing interests
+relevant features.
+Moreover, deep learning, such any machine learning              The author declares that she has no competing interests.
+techniques, works well with a balanced dataset. It is tough
+to obtain a balanced dataset when dealing with the              References
+customer churn problem because most customers are not
+churning. This study recommends that the telecom industry       [1] B. Gates, Why word is used, Microsoft Lett., 69(5), 53-60,
+                                                                     1998.
+to take the required churned customer data from the history
+or archive to balance the dataset used to train the model.      [1] Berkhout, A. J., Van Der Duin, P. A. (2007). New ways of
+Another way, by using balance techniques such as the ROS             innovation: An application of the cyclic innovation model to
+technique.                                                           the mobile telecom industry. International Journal of
+                                                                     Technology Management., 40(4), 294–309, 2007.
+Furthermore, the telecom industry should focus on the Bill
+                                                                [2] Khder, M. A., Fujo, S. W., Sayfi, M. A. (2021). A roadmap to
+Payment Analysis details besides how long the customer
+                                                                     data science: background, future, and trends. International
+belongs to the company to build a strong model that can              Journal of Intelligent Information and Database Systems.,
+predict customer churn. Besides that, the telecom industry           14(3), 277-293, 2021.
+should give the customer a good offer to convince them to
+subscribe with one or two years because our results show        [3] Perez, M. J., Flannery, W. T. (2009). A study of the
+                                                                     relationships between service failures and customer churn in
+that the customer with a short contract is more likely to
+                                                                     a telecommunications environment. PICMET: Portland
+churn.                                                               International Center for Management of Engineering and
+The telecom industry should give a good discount for the             Technology, Proceedings, October 2008, 3334–3342, 2009.
+customers who are subscribed with fiber optic service           [4] PK, D., SK, K., A, D., A, B., VA., K. (2016). Analysis of
+because our results show that this group of customers is             Customer Churn Prediction in Telecom Industry using
+more likely to churn than others. The telecom industry               Decision Trees and Logistic Regression. In 2016
+should avoid electronic check methods while paying the               Symposium on Colossal Data Analysis and Networking
+financial receivables and guide the customers to use mailed          (CDAN) (Pp. 1-4). IEEE., 88(5), 4, 2016.
+check, bank transfer, or credit card. Since the electronic      [5] Mishra, A., Reddy, U. S. (2018). A comparative study of
+check is in an electronic format, it can be processed in some        customer churn prediction in telecom industry using
+steps, and the customer may get confused. The results                ensemble based classifiers. Proceedings of the International
+prove that the customers who follow the payment methods              Conference on Inventive Computing and Informatics, ICICI
+as electronic check are most likely to churn. Also, the              2017, Icici, 721–725, 2018.
+telecom industry should give more attention to technical        [6] Amin, A., Al-Obeidat, F., Shah, B., Adnan, A., Loo, J.,
+support since the customers who are not serving with                 Anwar, S. (2019). Customer churn prediction in
+technical support are more likely to churn.                          telecommunication industry under uncertain situation.
+                                                                     Journal of Business Research., 94, 290–301, 2019.
+11 Future Work
+                                                                [7] Kloutix. (2018). Are your best telecom customers leaving you?
+                                                                      https://www.citationmachine.net/apa/citea-website/new
+In future work, the early stopping technique will be applied
+to the 10-fold cross-validation to achieve the higher           [8] Ahmad Naz, N., Shoaib, U., Shahzad Sarfraz, M. (2018). a
+accuracy as achieved with the hold-out evaluation method.            Review on Customer Churn Prediction Data Mining
+Moreover, the implemented model will perform on more                 Modeling Techniques. Indian Journal of Science and
+telecom datasets that contain a huge amount of data, such            Technology., 11(27), 1–7, 2018.
+as millions of records, to obtain higher accuracy since deep    [9] Umayaparvathi, V., Iyakutti, K. (2017). Automated Feature
+learning works well with more data.                                  Selection and Churn Prediction using Deep Learning
+                                                                     Models. International Research Journal of Engineering and
+Compare the model performance with more machine                      Technology(IRJET)., 4(3), 1846–1854, 2017.
+learning techniques such as random forest and decision
+tree.                                                           [10] Deng, L., Yu, D. (2013). Deep learning: Methods and
+                                                                     applications. Foundations and Trends in Signal Processing.,
+The implemented model will develop into a web                        7(3–4), 197–387, 2013.
+application using the flask technique and deploy it using       [11] Wehle, H. (2017). Machine Learning, Deep Learning, and
+Heroku Service to benefit the telecommunication                      AI: What’s the Difference? In International Conference on
+industries.                                                          Data Scientist Innovation Day, Bruxelles, Belgium., July.
+Acknowledgement                                                 [12] Ahmed, U., Khan, A., Khan, S. H., Basit, A., Haq, I. U., Lee,
+                                                                      Y. S. (2019). Transfer Learning and Meta Classification
+The authors are grateful to the Ahlia University, Bahrain             Based Deep Churn Prediction System for Telecom Industry.,
+and Applied Science University, Bahrain, for the full                 1–10, 2019.
+financial support granted to this research paper.
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+Inf. Sci. Lett. 11, No. 1, 185-198 (2022) / http://www.naturalspublishing.com/Journals.asp                                                 197
+[13] Momin, S., Bohra, T., Raut, P. (2020). Prediction of                     NH: Tuck School of Business, Dartmoth College.
+     Customer Churn Using Machine Learning. EAI
+     International Conference on Big Data Innovation for               [27] Li, Q., Xiong, Q., Ji, S., Wen, J., Gao, M., Yu, Y., Xu, R.
+     Sustainable Cognitive Computing., 203–212, 2020.                        (2019). Using fine-tuned conditional probabilities for data
+                                                                             transformation of nominal attributes. Pattern Recognition
+[14] Amin, A., Al-obeidat, F., Shah, B., Adnan, A., Loo, J.,                 Letters., 128, 107–114, 2019..
+     Anwar, S. (2018). Customer churn prediction in
+     telecommunication industry using data certainty Customer          [28] Xie, J., Li, Y., Wang, N., Xin, L., Fang, Y., Liu, J. (2020).
+     churn prediction in telecommunication industry using data              Feature Selection and Syndrome Classification for
+     certainty. Journal of Business Research., 2019, 1–12, 2018..           Rheumatoid Arthritis Patients with Traditional Chinese
+                                                                            Medicine Treatment. European Journal of Integrative
+[15] Agrawal, S., Das, A., Gaikwad, A., Dhage, S. (2018).                   Medicine, 34(October 2019), 101059.
+     Customer Churn Prediction Modelling Based on
+     Behavioural Patterns Analysis using Deep Learning. 2018           [29] Karanovic, M., Popovac, M., Sladojevic, S., Arsenovic, M.,
+                                                                            Stefanovic, D. (2018). Telecommunication Services Churn
+     International Conference on Smart Computing and
+     Electronic Enterprise (ICSCEE)., 1–6.                                  Prediction - Deep Learning Approach. 2018 26th
+                                                                            Telecommunications Forum, TELFOR 2018 - Proceedings -
+[16] Mohammad NI, SA, I., MN, K., OM, Y., A, A. (2019).                     IEEE, January 2019.
+     Customer Churn Prediction In Telecommunication Industry
+     Using Machine Learning Classifiers. Proceedings of the 3rd        [30]    Wadikar, D. (2020). Customer churn prediction
+     International Conference on Vision, Image and Signal                     [Technological University Dublin]. In Masters Dissertation.
+     Processing., 1–7, 2019.                                                  Technological University Dublin.
+
+[17] Pamina, J., Beschi Raja, J., Sathya Bama, S., Soundarya, S.,      [31] Kumar, A. (2020). Imputing Missing Data Using Sklearn
+                                                                            SimpleImputer - DZone AI. Zone.Com. [32] Hale, J. (2020).
+      Sruthi, M. S., Kiruthika, S., Aiswaryadevi, V. J., Priyanka,
+      G. (2019). An effective classifier for predicting churn in            Smarter Ways to Encode Categorical Data for Machine
+      telecommunication. Journal of Advanced Research in                    Learning. Medium. https://towardsdatascience.com/smarter-
+      Dynamical and Control Systems., 11(1 Special Issue), 221–             ways-to-encodecategorical-data-for-machine-learning-part-
+      229.                                                                  1-of-3-6dca2f71b159
+
+[18] Lecun, Y., Bengio, Y., Hinton, G. (2015). Deep learning.          [33] Pires, I. M., Hussain, F., Garcia, N. M., Lameski, P.,
+     Nature., 521(7553), 436–444, 2015.                                     Zdravevski, E. (2020). Homogeneous data normalization
+                                                                            and deep learning: A case study in human activity
+[19] Keramati, A., Jafari-Marandi, R., Aliannejadi, M., Ahmadian,           classification. Future Internet., 12(11), 1–14, 2020.
+      I., Mozaffari, M., Abbasi, U. (2014). Improved churn
+      prediction in telecommunication industry using data mining       [34] ZHOU, J., YAN, J., YANG, L., WANG, M., XIA, P. (2019).
+      techniques. Applied Soft Computing Journal., 24, 994–1012              Customer Churn Prediction Model Based on LSTM and
+                                                                             CNN in Music Streaming. DEStech Transactions on
+[20] Sundararajan A, Gursoy K. (2020). Telecom customer churn                Engineering and Technology Research, aemce, 254–261.
+      prediction. March. https://doi.org/10.7282/t3-76xmde75.
+                                                                       [35] Zhu, B., Baesens, B., Seppe, K. L. M. (2017). An empirical
+[21] Ahmad, A. K., Jafar, A., Aljoumaa, K. (2019). Customer                  comparison of techniques for the class imbalance problem in
+     churn prediction in telecom using machine learning in big               churn prediction. Information Sciences., 408, 84–99, 2017.
+     data platform. Journal of Big Data., 6(1), 2019.
+                                                                       [36] Kuhn, M., Johnson, K. (2013). Applied Predictive Modeling.
+[22] Xiong, A., You, Y., Long, L. (2019). L-RBF: A customer                  Springer. https://link.springer.com/book/10.1007
+     churn prediction model based on lasso + RBF. Proceedings -
+     2019 IEEE International Congress on Cybermatics: 12th             [37] Zhu, B., Guicai, X., Yuan, Y., Yiqin, D. (2018). Investigating
+     IEEE International Conference on Internet of Things, 15th               Decision Tree in Churn Prediction with Class Imbalance. In
+     IEEE International Conference on Green Computing and                    Proceedings of the International Conference on Data
+     Communications, 12th IEEE International Conference on                   Processing and Applications., 11–15, 2018.
+     Cyber, Physical and So., 621–626, 2019.                           [38] Fern´andez, A., Garc´ıa, S., Galar, M., Prati, R. C.,
+[23] De Caigny, A., Coussement, K., De Bock, K. W. (2018). A                Krawczyk, B., Herrera, F. (2018). Learning from
+     new hybrid classification algorithm for customer churn                 Imbalanced         Data      Sets.     Springer Berlin.
+                                                                            https://link.springer.com/book/10.1007
+     prediction based on logistic regression and decision trees.
+     European Journal of Operational Research., 269(2), 760-           [39] Amin, A., Anwar, S., Adnan, A., Nawaz, M., Howard, N.,
+     772, 2018.                                                             Qadir, J., Member, S., Hawalah, A., Hussain, A., Member,
+[24] Idris, A., Khan, A., Soo, Y. (2013). Intelligent churn                 S. (2016). Comparing Oversampling Techniques to Handle
+     prediction in telecom: employing mRMR feature selection                the Class Imbalance Problem: A Customer Churn Prediction
+     and RotBoost based ensemble classification. Applied                    Case Study. IEEE Access., 4(Ml), 7940–7957, 2016.
+     Intelligence., 93(3), 659–672, 2013.                              [40] Madeline, M. (2019). Intro to Feature Selection Methods for
+[25] Idris, A., Khan, A. (2012). Genetic Programming and                    Data                    Science.                  Medium.
+                                                                            https://towardsdatascience.com/intro-to-feature-
+     Adaboosting based churn prediction for Telecom. IEEE
+     International Conference on Systems, Man, and Cybernetics              selectionmethods-for-data-science-4cae2178a00a
+     (SMC), October, 1328–1332.                                        [41] Bhandari. (2015). Towards an Efficient Method of Modeling
+[26] Neslin, S. (2002). Cell2Cell: The churn game. In Hanover,               “Next Best Action” for Digital Buyer’s Journey in B2B—In:
+
+                                                                                                              © 2022 NSP
+                                                                                                              Natural Sciences Publishing Cor.
+198                                                                   S. Fujo et al.: Customer Churn prediction in telecommunication …
+        Machine Learning and Data Mining in pattern Recognition.            of Analysis and Testing., 2(3), 249–262, 2018.
+[42] Kumarappan, S. (2020). Feature Selection by Lasso and
+     Ridge Regression-Python Code Examples. Medium.
+     https://medium.com/@sabarirajan.kumarappan/featureselect
+     ion-by-lasso-and-ridge-regression-python-codeexamples-
+     1e8ab451b94b
+[43] Ahn, J. H., Han, S. P., Lee, Y. S. (2006). Customer churn
+     analysis: Churn determinants and mediation effects of
+     partial defection in the Korean mobile telecommunications
+     service industry. Telecommunications Policy., 30(10–11),
+     552–568, 2006.
+[44] Hastie, T., Tibshirani, R. Friedman, J. (2009). The Elements
+      of Statistical Learning: Data Mining, Inference, and
+      Prediction.      Springer      Science     Business    Media.
+      https://silo.pub/the-elements-of-statistical-learning-
+      datamining-inference-and-prediction-2nd-edition-
+      springerseries-in-statistics.html
+[45] Brownlee, J. (2020). A Gentle Introduction to Imbalanced
+     Classification.        Machine     Learning     Mastery.
+     https://machinelearningmastery.com/what-is-
+     imbalancedclassification/::text=Another way to describe
+     the,percent in a third class.
+[46] Krishnan, H. (2020). Confusion Matrix, Accuracy, Precision,
+      Recall, F1 Score. Medium. https://medium.com/analytics-
+      vidhya/confusion-matrixaccuracy-precision- recall-f1-score-
+      ade299cf63cd
+[47] Wang, C., Han, D., Fan, W., Liu, Q. (2019). Customer Churn
+     Prediction with Feature Embedded Convolutional Neural
+     Network: An Empirical Study in the Internet Funds
+     Industry. International Journal of Computational
+     Intelligence and Applications., 18(1), 1–19, 2019.
+[48] Zhong, J., Li, W. (2019). Predicting customer churn in the
+     telecommunication industry by analyzing phone call
+     transcripts with convolutional neural networks. ACM
+     International Conference Proceeding Series, Part
+     F1481(March)., 55–59, 2019.
+[49] Bisong, E. (2019). Regularization for Deep Learning. In:
+     Building Machine Learning and Deep Learning Models on
+     Google Cloud Platform. (C. Apress, Berkeley (ed.)).
+     Springer.
+[50] Kazi, M., Eljack, F., Mahdi, E. (2020). Predictive ANN
+     Models for Varying Filler Content for Cotton Fiber / PVC
+     Composites based on Experimental Load Displacement
+     Curves. Composite Structures, August., 112885, 2020.
+[51] Jajodia, T., Garg, P. (2019). Image Classification – Cat and
+      Dog Images. International Research Journal of Engineering
+      and Technology (IRJET)., 06(12), 570–572, 2019.
+[52] Liang, X., Angelopoulou, A., Kapetanios, E. (2020). A Multi-
+      modal Machine Learning Approach and Toolkit to
+      Automate Recognition of Early Stages of Dementia Among
+      British Sign Language Users. Bartoli A., Fusiello A. (Eds)
+      Computer Vision – ECCV 2020 Workshops. ECCV 2020.
+      Lecture Notes in Computer Science., 12536, 278–293, 2020.
+[53] Xu, Y., Goodacre, R. (2018). On Splitting Training and
+     Validation Set: A Comparative Study of Cross - Validation ,
+     Bootstrap and Systematic Sampling forEstimating the
+     Generalization Performance of Supervised Learning. Journal
+
+© 2022 NSP
+Natural Sciences Publishing Cor.
+
