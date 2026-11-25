@@ -38,13 +38,22 @@ El documento de diapositivas utiliza formato panorámico 16:9. No incluye una po
 ** Qué decir
 
 #+begin_quote
-Una compañía de telecomunicaciones tiene información sobre sus clientes: cuánto tiempo llevan contratados, cuánto pagan y cómo utilizan sus servicios. La pregunta es si podemos utilizar esa información para anticipar quién va a abandonar la compañía.
+Una compañía de telecomunicaciones tiene información sobre sus
+clientes: cuánto tiempo llevan contratados, cuánto pagan y cómo
+utilizan sus servicios. La pregunta es si podemos utilizar esa
+información para anticipar quién va a abandonar la compañía.
 
-Este problema se conoce como customer churn prediction, o predicción del abandono de clientes.
+Este problema se conoce como customer churn prediction, o predicción
+del abandono de clientes.
 
-Su interés empresarial es poder dirigir las acciones de retención hacia clientes en riesgo, en lugar de ofrecer incentivos indiscriminadamente.
+Su interés empresarial es poder dirigir las acciones de retención
+hacia clientes en riesgo, en lugar de ofrecer incentivos
+indiscriminadamente.
 
-El artículo que voy a presentar utiliza una red neuronal para abordar este problema. Veremos qué datos emplea, cómo construye el modelo y qué resultados obtiene. Finalmente, señalaré tres dudas metodológicas que afectan a la interpretación de esos resultados.
+El artículo que voy a presentar utiliza una red neuronal para abordar
+este problema. Veremos qué datos emplea, cómo construye el modelo y
+qué resultados obtiene. Finalmente, señalaré tres dudas metodológicas
+que afectan a la interpretación de esos resultados.
 #+end_quote
 
 * 2. Los datos: clases desequilibradas
@@ -66,15 +75,23 @@ Fuente: tabla de características, p. 188.
 ** Qué decir
 
 #+begin_quote
-Los autores utilizan dos conjuntos de datos públicos: IBM Telco y Cell2Cell.
+Los autores utilizan dos conjuntos de datos públicos: IBM Telco y
+Cell2Cell.
 
-IBM Telco contiene unos siete mil clientes y veinte variables predictoras. Cell2Cell es mayor: contiene unos cincuenta y un mil clientes y cincuenta y siete variables.
+IBM Telco contiene unos siete mil clientes y veinte variables
+predictoras. Cell2Cell es mayor: contiene unos cincuenta y un mil
+clientes y cincuenta y siete variables.
 
-En ambos casos, la variable que queremos predecir es binaria: el cliente abandona o no abandona.
+En ambos casos, la variable que queremos predecir es binaria: el
+cliente abandona o no abandona.
 
-Hay una característica importante: solo alrededor de una cuarta parte de los clientes abandona. Por tanto, las clases están desequilibradas.
+Hay una característica importante: solo alrededor de una cuarta parte
+de los clientes abandona. Por tanto, las clases están desequilibradas.
 
-Esto significa que un modelo podría acertar muchas veces simplemente prediciendo que nadie se va. Para valorar si realmente resulta útil, necesitamos comprobar también cuántos abandonos detecta y cuántas falsas alarmas genera.
+Esto significa que un modelo podría acertar muchas veces simplemente
+prediciendo que nadie se va. Para valorar si realmente resulta útil,
+necesitamos comprobar también cuántos abandonos detecta y cuántas
+falsas alarmas genera.
 #+end_quote
 
 * 3. La propuesta: combinar varias técnicas
