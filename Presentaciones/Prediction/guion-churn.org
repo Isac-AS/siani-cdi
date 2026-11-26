@@ -38,7 +38,7 @@ El documento de diapositivas utiliza formato panorámico 16:9. No incluye una po
 ** Qué decir
 
 #+begin_quote
-Una compañía de telecomunicaciones tiene información sobre sus
+Una compañía de telecomunicaciones tiene información sobre sus\
 clientes: cuánto tiempo llevan contratados, cuánto pagan y cómo
 utilizan sus servicios. La pregunta es si podemos utilizar esa
 información para anticipar quién va a abandonar la compañía.
