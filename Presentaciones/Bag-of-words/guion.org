@@ -29,36 +29,59 @@ Los tiempos son orientativos. Incluir breves pausas al señalar la tabla de frec
 
 ** 1. Bag of Words: Del texto a los números · 0:00–0:40
 
-Bag of Words, o bolsa de palabras, es una de las técnicas fundacionales del procesamiento del lenguaje natural para convertir texto no estructurado en representaciones vectoriales numéricas.
+Bag of Words, o bolsa de palabras, es una de las técnicas
+fundacionales del procesamiento del lenguaje natural para convertir
+texto no estructurado en representaciones vectoriales numéricas.
 
 Antes de contar palabras, aplicamos un preprocesamiento básico:
 1. *Tokenizamos* el texto para separar las palabras individuales.
 2. *Limpiamos* signos de puntuación y normalizamos a minúsculas.
-3. *Eliminamos palabras vacías* o /stop words/ (como artículos o preposiciones), conservando solo los términos que aportan carga temática.
+3. *Eliminamos palabras vacías* o /stop words/ (como artículos o
+   preposiciones), conservando solo los términos que aportan carga
+   temática.
 
-Trabajaremos con una colección de cuatro documentos breves: dos sobre partidos deportivos y dos sobre cocina. Nuestro objetivo es proyectar estas frases en un espacio matemático donde una máquina pueda operarlas.
+Trabajaremos con una colección de cuatro documentos breves: dos sobre
+partidos deportivos y dos sobre cocina. Nuestro objetivo es proyectar
+estas frases en un espacio matemático donde una máquina pueda
+operarlas.
 
 ** 2. Un documento, un vector · 0:40–1:30
 
-A partir de la colección construimos un vocabulario común con las ocho palabras únicas presentes. Cada palabra define una columna fija de esta matriz documento-término, y cada documento se convierte en una fila.
+A partir de la colección construimos un vocabulario común con las ocho
+palabras únicas presentes. Cada palabra define una columna fija de
+esta matriz documento-término, y cada documento se convierte en una
+fila.
 
-Por ejemplo, en la frase A («equipo gana partido») asignamos un 1 en esas tres posiciones y un 0 en todas las demás. Cada fila constituye un vector de ocho dimensiones.
+Por ejemplo, en la frase A («equipo gana partido») asignamos un 1 en
+esas tres posiciones y un 0 en todas las demás. Cada fila constituye
+un vector de ocho dimensiones.
 
 Nótese dos aspectos fundamentales:
-- Conservamos la frecuencia de término (/term frequency/, $tf$), pero *descartamos totalmente el orden* y la sintaxis.
-- En colecciones del mundo real, donde el vocabulario supera fácilmente las diez mil palabras, la gran mayoría de las entradas son cero; se trata de una *matriz dispersa* (/sparse matrix/).
+- Conservamos la frecuencia de término (/term frequency/, $tf$), pero
+  *descartamos totalmente el orden* y la sintaxis.
+- En colecciones del mundo real, donde el vocabulario supera
+  fácilmente las diez mil palabras, la gran mayoría de las entradas
+  son cero; se trata de una *matriz dispersa* (/sparse matrix/).
 
 ** 3. Del vector al agrupamiento · 1:30–2:20
 
-Una vez que cada documento es un punto en el espacio vectorial, podemos medir distancias geométricas (como la distancia euclídea o la similitud coseno) y aplicar algoritmos de agrupamiento, como /k-means/.
+Una vez que cada documento es un punto en el espacio vectorial,
+podemos medir distancias geométricas (como la distancia euclídea o la
+similitud coseno) y aplicar algoritmos de agrupamiento, como
+/k-means/.
 
 En el gráfico de la izquierda vemos una proyección simplificada:
-- En el eje vertical medimos la afinidad con el vocabulario deportivo; allí se agrupan los documentos A y B.
-- En el eje horizontal medimos la afinidad con la cocina; allí se concentran los documentos C y D.
+- En el eje vertical medimos la afinidad con el vocabulario deportivo;
+  allí se agrupan los documentos A y B.
+- En el eje horizontal medimos la afinidad con la cocina; allí se
+  concentran los documentos C y D.
 
-El agrupamiento es no supervisado: el algoritmo no conoce las etiquetas «deporte» o «cocina», solo detecta vecindad espacial por términos compartidos. Nosotros interpretamos los grupos.
+El agrupamiento es no supervisado: el algoritmo no conoce las
+etiquetas «deporte» o «cocina», solo detecta vecindad espacial por
+términos compartidos. Nosotros interpretamos los grupos.
 
-Principio clave: *Bag of Words proporciona la representación métrica; el algoritmo de agrupamiento descubre la estructura.*
+Principio clave: *Bag of Words proporciona la representación métrica;
+el algoritmo de agrupamiento descubre la estructura.*
 
 ** 4. Lo que se pierde al contar · 2:20–3:05
 
@@ -68,21 +91,38 @@ La primera es la *pérdida de sintaxis*. Consideremos:
 - «El perro muerde al hombre»
 - «El hombre muerde al perro»
 
-Tras limpiar las /stop words/, ambas oraciones quedan reducidas al mismo multiconjunto: una ocurrencia de «hombre», «muerde» y «perro». Producen exactamente el mismo vector numérico, a pesar de tener significados opuestos.
+Tras limpiar las /stop words/, ambas oraciones quedan reducidas al
+mismo multiconjunto: una ocurrencia de «hombre», «muerde» y
+«perro». Producen exactamente el mismo vector numérico, a pesar de
+tener significados opuestos.
 
-La segunda limitación es la *ausencia de semántica léxica*. «Coche» y «automóvil» son columnas ortogonales e independientes; el modelo ignora que son sinónimos. Igualmente, palabras polisémicas como «banco» colapsan en una sola dimensión. Técnicas como los N-gramas rescatan algo de contexto local, pero multiplican exponencialmente el tamaño del vocabulario.
+La segunda limitación es la *ausencia de semántica léxica*. «Coche» y
+«automóvil» son columnas ortogonales e independientes; el modelo
+ignora que son sinónimos. Igualmente, palabras polisémicas como
+«banco» colapsan en una sola dimensión. Técnicas como los N-gramas
+rescatan algo de contexto local, pero multiplican exponencialmente el
+tamaño del vocabulario.
 
 ** 5. De BoW al espacio latente · 3:05–4:15
 
 Esta limitación motiva el salto a los *espacios latentes*.
 
-En BoW nos movemos en un *espacio explícito*: cada eje es una palabra literal. Para mejorar este espacio, se suele aplicar *TF-IDF*, que premia los términos frecuentes en un documento concreto pero penaliza aquellos que aparecen en casi toda la colección, reduciendo el ruido.
+En BoW nos movemos en un *espacio explícito*: cada eje es una palabra
+literal. Para mejorar este espacio, se suele aplicar *TF-IDF*, que
+premia los términos frecuentes en un documento concreto pero penaliza
+aquellos que aparecen en casi toda la colección, reduciendo el ruido.
 
-Sin embargo, para descubrir conceptos subyacentes aplicamos una descomposición matricial SVD sobre la matriz documento-término. Esto da lugar a *LSA* (/Latent Semantic Analysis/):
+Sin embargo, para descubrir conceptos subyacentes aplicamos una
+descomposición matricial SVD sobre la matriz documento-término. Esto
+da lugar a *LSA* (/Latent Semantic Analysis/):
 - Pasamos de miles de palabras a pocas dimensiones latentes continuas.
-- Términos como «coche» y «automóvil» se aproximan en el espacio latente porque suelen aparecer acompañados de palabras similares (como «carretera» o «conducir»).
+- Términos como «coche» y «automóvil» se aproximan en el espacio
+  latente porque suelen aparecer acompañados de palabras similares
+  (como «carretera» o «conducir»).
 
-En el aprendizaje profundo moderno, redes neuronales como autoencoders o modelos de /embeddings/ (Word2Vec) aprenden estos espacios densos y latentes de manera no lineal.
+En el aprendizaje profundo moderno, redes neuronales como autoencoders
+o modelos de /embeddings/ (Word2Vec) aprenden estos espacios densos y
+latentes de manera no lineal.
 
 ** 6. La idea esencial y aplicaciones · 4:15–5:00
 
