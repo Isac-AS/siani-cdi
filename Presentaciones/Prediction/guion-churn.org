@@ -1,42 +1,4 @@
-#+TITLE: Guion: predicción del abandono de clientes en telecomunicaciones
-#+SUBTITLE: Presentación de 10 minutos sobre Fujo, Subramanian y Khder (2022)
-#+LANGUAGE: es
-#+OPTIONS: toc:2 num:nil author:nil date:nil
-#+STARTUP: overview
-
-* Organización y exportación
-
-La presentación contiene ocho diapositivas. Los intervalos incluyen tiempo para señalar las tablas y hacer pausas. Conviene ensayar con cronómetro y ajustar el ritmo.
-
-- Diapositivas: [[file:presentacion-churn.org][presentacion-churn.org]].
-- Artículo: [[file:Customer Churn Prediction in Telecommunication Industry Using Deep Learning.pdf][Customer Churn Prediction in Telecommunication Industry Using Deep Learning]].
-- Texto extraído: [[file:pdf.txt][pdf.txt]].
-
-** Exportar las diapositivas a PDF con Beamer
-
-Se necesitan Emacs con Org y una distribución LaTeX que incluya Beamer, soporte para español y =pdflatex=.
-
-1. Abre =presentacion-churn.org= en Emacs.
-2. Pulsa =M-:=, evalúa =(require 'ox-beamer)= y confirma con Intro.
-3. Ejecuta =M-x org-beamer-export-to-pdf=.
-4. Abre el archivo resultante, =presentacion-churn.pdf=.
-
-El documento de diapositivas utiliza formato panorámico 16:9. No incluye una portada adicional: la primera de las ocho diapositivas introduce el problema y cita el artículo.
-
 * 1. El problema: ¿qué clientes van a abandonar?
-:PROPERTIES:
-:TIEMPO: 0:00–1:00
-:DURACION: 1:00
-:END:
-
-** En pantalla
-
-- Pregunta central: ¿podemos anticipar el abandono de un cliente?
-- Clasificación binaria: abandona / no abandona.
-- Artículo de Fujo, Subramanian y Khder, publicado en 2022.
-
-** Qué decir
-
 #+begin_quote
 Una compañía de telecomunicaciones tiene información sobre sus\
 clientes: cuánto tiempo llevan contratados, cuánto pagan y cómo
@@ -57,23 +19,6 @@ que afectan a la interpretación de esos resultados.
 #+end_quote
 
 * 2. Los datos: clases desequilibradas
-:PROPERTIES:
-:TIEMPO: 1:00–2:00
-:DURACION: 1:00
-:END:
-
-** En pantalla
-
-| Característica         | IBM Telco | Cell2Cell |
-|------------------------+-----------+-----------|
-| Clientes               |     7.043 |    51.047 |
-| Variables predictoras  |        20 |        57 |
-| Clientes que abandonan |    26,5 % |    28,8 % |
-
-Fuente: tabla de características, p. 188.
-
-** Qué decir
-
 #+begin_quote
 Los autores utilizan dos conjuntos de datos públicos: IBM Telco y
 Cell2Cell.
@@ -95,204 +40,152 @@ falsas alarmas genera.
 #+end_quote
 
 * 3. La propuesta: combinar varias técnicas
-:PROPERTIES:
-:TIEMPO: 2:00–3:30
-:DURACION: 1:30
-:END:
-
-** En pantalla
-
-Datos → preparación → red neuronal → predicción.
-
-- Selección de variables: Lasso.
-- Equilibrado: Random Oversampling.
-- Control del sobreajuste: regularización y parada temprana.
-- Configuración destacada: capas de 250 neuronas.
-
-** Qué decir
-
 #+begin_quote
-El modelo se llama Deep-BP-ANN. Es una red neuronal artificial entrenada mediante retropropagación, que consiste en ajustar sus pesos a partir del error de las predicciones.
+El modelo se llama Deep-BP-ANN. Es una red neuronal artificial
+entrenada mediante retropropagación, que consiste en ajustar sus pesos
+a partir del error de las predicciones.
 
-La aportación principal del artículo está en cómo combina varias técnicas alrededor de esa red.
+La aportación principal del artículo está en cómo combina varias
+técnicas alrededor de esa red.
 
-Primero preparan los datos: completan valores ausentes, convierten las variables categóricas en representaciones numéricas y normalizan variables.
+Primero preparan los datos: completan valores ausentes, convierten las
+variables categóricas en representaciones numéricas y normalizan
+variables.
 
-Utilizan Lasso para seleccionar información relevante y reducir la influencia de variables poco útiles.
+Utilizan Lasso para seleccionar información relevante y reducir la
+influencia de variables poco útiles.
 
-Para tratar el desequilibrio, aplican sobremuestreo aleatorio. Esto consiste en duplicar ejemplos de la clase minoritaria, en este caso los clientes que abandonan. No se incorporan clientes nuevos: se reutilizan observaciones existentes, como si fotocopiáramos los expedientes de esos clientes.
+Para tratar el desequilibrio, aplican sobremuestreo aleatorio. Esto
+consiste en duplicar ejemplos de la clase minoritaria, en este caso
+los clientes que abandonan. No se incorporan clientes nuevos: se
+reutilizan observaciones existentes, como si fotocopiáramos los
+expedientes de esos clientes.
 
-También incorporan mecanismos para controlar el sobreajuste, que ocurre cuando el modelo aprende demasiado las particularidades del entrenamiento y generaliza mal.
+También incorporan mecanismos para controlar el sobreajuste, que
+ocurre cuando el modelo aprende demasiado las particularidades del
+entrenamiento y generaliza mal.
 
-La configuración que presentan como más favorable combina Lasso, capas de doscientas cincuenta neuronas, regularización de actividad y parada temprana.
+La configuración que presentan como más favorable combina Lasso, capas
+de doscientas cincuenta neuronas, regularización de actividad y parada
+temprana.
 #+end_quote
 
-** Nota para preparar la exposición
-
-El esquema resume los componentes, no fija el orden de separación de entrenamiento y prueba: el artículo no lo documenta con claridad. Tampoco se dibuja un número exacto de capas ocultas, porque la descripción de la arquitectura es inconsistente entre el cuerpo del artículo y la conclusión.
-
 * 4. ¿Cómo comprueban si funciona?
-:PROPERTIES:
-:TIEMPO: 3:30–4:30
-:DURACION: 1:00
-:END:
-
-** En pantalla
-
-- Holdout: 90 % entrenamiento / 10 % prueba.
-- Validación cruzada: 10 particiones.
-- Exactitud: ¿cuánto acierta en total?
-- Sensibilidad: ¿cuántos abandonos detecta?
-- Precisión: ¿cuántas alertas son correctas?
-
-** Qué decir
-
 #+begin_quote
 Los autores utilizan dos formas de evaluación.
 
-La primera es una separación simple: entrenan con el noventa por ciento de los datos y evalúan con el diez por ciento restante.
+La primera es una separación simple: entrenan con el noventa por
+ciento de los datos y evalúan con el diez por ciento restante.
 
-La segunda es validación cruzada de diez particiones, alternando qué parte se utiliza para evaluar.
+La segunda es validación cruzada de diez particiones, alternando qué
+parte se utiliza para evaluar.
 
 Para interpretar los resultados voy a centrarme en tres métricas.
 
-La exactitud es el porcentaje total de predicciones correctas. La sensibilidad indica qué proporción de los abandonos reales consigue detectar el modelo. Y la precisión indica qué proporción de las alertas de abandono resulta correcta.
+La exactitud es el porcentaje total de predicciones correctas. La
+sensibilidad indica qué proporción de los abandonos reales consigue
+detectar el modelo. Y la precisión indica qué proporción de las
+alertas de abandono resulta correcta.
 
-Esta distinción es importante: detectar casi todos los abandonos puede ser útil, pero si generamos demasiadas falsas alarmas también podemos gastar recursos en clientes que no iban a marcharse.
+Esta distinción es importante: detectar casi todos los abandonos puede
+ser útil, pero si generamos demasiadas falsas alarmas también podemos
+gastar recursos en clientes que no iban a marcharse.
 #+end_quote
 
 * 5. Resultados: elevada detección, con falsas alarmas
-:PROPERTIES:
-:TIEMPO: 4:30–6:15
-:DURACION: 1:45
-:END:
-
-** En pantalla
-
-| Datos      | Evaluación         | Exactitud | Sensibilidad |
-|------------+--------------------+-----------+--------------|
-| IBM Telco  | Holdout            |   88,12 % |      93,05 % |
-| IBM Telco  | Validación cruzada |   86,57 % |      94,45 % |
-| Cell2Cell  | Holdout            |   79,38 % |      89,32 % |
-| Cell2Cell  | Validación cruzada |   73,90 % |      89,74 % |
-
-Cell2Cell, validación cruzada: precisión del *68,15 %*.
-
-Fuente: tabla de resultados, p. 193.
-
-** Qué decir
-
 #+begin_quote
-Aquí aparecen los resultados principales. No hace falta quedarse con todos los decimales; lo importante son dos patrones.
+Aquí aparecen los resultados principales. No hace falta quedarse con
+todos los decimales; lo importante son dos patrones.
 
-Primero, el rendimiento es mejor en IBM Telco. La exactitud alcanza aproximadamente el ochenta y ocho por ciento con la separación simple y el ochenta y siete por ciento con validación cruzada.
+Primero, el rendimiento es mejor en IBM Telco. La exactitud alcanza
+aproximadamente el ochenta y ocho por ciento con la separación simple
+y el ochenta y siete por ciento con validación cruzada.
 
-En Cell2Cell, los valores son inferiores: aproximadamente un setenta y nueve y un setenta y cuatro por ciento, respectivamente.
+En Cell2Cell, los valores son inferiores: aproximadamente un setenta y
+nueve y un setenta y cuatro por ciento, respectivamente.
 
-Segundo, la sensibilidad es elevada en ambos conjuntos. El modelo detecta alrededor del noventa y cuatro por ciento de los abandonos en IBM con validación cruzada, y cerca del noventa por ciento en Cell2Cell.
+Segundo, la sensibilidad es elevada en ambos conjuntos. El modelo
+detecta alrededor del noventa y cuatro por ciento de los abandonos en
+IBM con validación cruzada, y cerca del noventa por ciento en
+Cell2Cell.
 
-Sin embargo, detectar muchos abandonos no significa que todas las alertas sean fiables.
+Sin embargo, detectar muchos abandonos no significa que todas las
+alertas sean fiables.
 
-En Cell2Cell, con validación cruzada, la precisión es del sesenta y ocho por ciento. En esa evaluación, de cada cien clientes señalados como futuros abandonos, aproximadamente sesenta y ocho abandonan y treinta y dos son falsas alarmas.
+En Cell2Cell, con validación cruzada, la precisión es del sesenta y
+ocho por ciento. En esa evaluación, de cada cien clientes señalados
+como futuros abandonos, aproximadamente sesenta y ocho abandonan y
+treinta y dos son falsas alarmas.
 
-Por tanto, el modelo presenta un compromiso entre detectar clientes en riesgo y generar intervenciones innecesarias. Además, estas cifras corresponden a las condiciones del experimento; no podemos trasladarlas automáticamente a una cartera real de clientes.
+Por tanto, el modelo presenta un compromiso entre detectar clientes en
+riesgo y generar intervenciones innecesarias. Además, estas cifras
+corresponden a las condiciones del experimento; no podemos
+trasladarlas automáticamente a una cartera real de clientes.
 #+end_quote
 
 * 6. ¿Mejora frente a otras alternativas?
-:PROPERTIES:
-:TIEMPO: 6:15–7:15
-:DURACION: 1:00
-:END:
-
-** En pantalla
-
-- Comparación interna: XGBoost, regresión logística, Naïve Bayes y KNN.
-- Antecedente en Cell2Cell, con validación cruzada:
-  - CNN/LFNN: 71,66 % de exactitud.
-  - Deep-BP-ANN: 73,90 %.
-  - Diferencia: +2,24 puntos porcentuales.
-- Comparación entre publicaciones, no un experimento idéntico.
-
-Fuente de las cifras del antecedente: p. 194.
-
-** Qué decir
-
 #+begin_quote
 Los autores comparan su red con cuatro métodos clásicos: XGBoost, regresión logística, Naïve Bayes y vecinos más próximos.
 
 Según los resultados que presentan, la red obtiene el mejor rendimiento y XGBoost es el competidor más cercano.
 
-También comparan sus cifras con trabajos anteriores. Por ejemplo, para Cell2Cell con validación cruzada, presentan una exactitud del setenta y tres coma noventa por ciento frente al setenta y uno coma sesenta y seis de uno de los antecedentes.
+También comparan sus cifras con trabajos anteriores. Por ejemplo, para
+Cell2Cell con validación cruzada, presentan una exactitud del setenta
+y tres coma noventa por ciento frente al setenta y uno coma sesenta y
+seis de uno de los antecedentes.
 
 La mejora es de dos coma veinticuatro puntos porcentuales.
 
-Pero estas comparaciones entre artículos requieren cautela: utilizar el mismo conjunto de datos no garantiza que se hayan preparado igual ni que los modelos se hayan ajustado en las mismas condiciones.
+Pero estas comparaciones entre artículos requieren cautela: utilizar
+el mismo conjunto de datos no garantiza que se hayan preparado igual
+ni que los modelos se hayan ajustado en las mismas condiciones.
 #+end_quote
 
 * 7. Limitaciones: ¿hasta dónde podemos confiar?
-:PROPERTIES:
-:TIEMPO: 7:15–9:00
-:DURACION: 1:45
-:END:
-
-** En pantalla
-
-1. Posible fuga de datos: orden del sobremuestreo y la partición poco claro.
-2. Entrenamiento diferente: parada temprana en holdout y épocas fijas en validación cruzada.
-3. Reproducibilidad e incertidumbre: faltan detalles y medidas de variación.
-
-** Qué decir
-
 #+begin_quote
 La principal duda metodológica está en el sobremuestreo.
 
-El artículo explica que duplica observaciones para equilibrar las clases, pero no deja claro si lo hace antes o después de separar entrenamiento y prueba.
+El artículo explica que duplica observaciones para equilibrar las
+clases, pero no deja claro si lo hace antes o después de separar
+entrenamiento y prueba.
 
-Si se duplican los clientes antes de dividir los datos, podrían aparecer copias de un mismo cliente en ambos conjuntos. En ese caso, la evaluación sería demasiado optimista, porque el modelo estaría siendo examinado con ejemplos que prácticamente ya ha visto.
+Si se duplican los clientes antes de dividir los datos, podrían
+aparecer copias de un mismo cliente en ambos conjuntos. En ese caso,
+la evaluación sería demasiado optimista, porque el modelo estaría
+siendo examinado con ejemplos que prácticamente ya ha visto.
 
-El texto no permite demostrar que esto haya ocurrido, pero tampoco permite descartarlo. Por eso debemos presentarlo como un riesgo, no como un error confirmado.
+Una segunda limitación es que las dos evaluaciones no utilizan
+exactamente la misma política de entrenamiento. En el holdout aplican
+parada temprana, mientras que en validación cruzada utilizan un número
+fijo de épocas. Por tanto, la diferencia entre sus resultados no
+depende únicamente de cómo se dividen los datos.
 
-Una segunda limitación es que las dos evaluaciones no utilizan exactamente la misma política de entrenamiento. En el holdout aplican parada temprana, mientras que en validación cruzada utilizan un número fijo de épocas. Por tanto, la diferencia entre sus resultados no depende únicamente de cómo se dividen los datos.
+Finalmente, faltan detalles de configuración y no se presentan
+intervalos de confianza ni la variación entre particiones.
 
-Finalmente, faltan detalles de configuración y no se presentan intervalos de confianza ni la variación entre particiones.
-
-Estas limitaciones no eliminan el interés del trabajo, pero reducen la fuerza con la que podemos afirmar que esta combinación es superior a las alternativas.
+Estas limitaciones no eliminan el interés del trabajo, pero reducen la
+fuerza con la que podemos afirmar que esta combinación es superior a
+las alternativas.
 #+end_quote
 
 * 8. Conclusión
-:PROPERTIES:
-:TIEMPO: 9:00–10:00
-:DURACION: 1:00
-:END:
-
-** En pantalla
-
-- Combinación de técnicas conocidas.
-- Alta sensibilidad en los experimentos.
-- Evaluación y reproducibilidad como puntos pendientes.
-
-** Qué decir
-
 #+begin_quote
 Para terminar, me quedaría con tres ideas.
 
-La primera es que predecir el abandono puede ayudar a priorizar acciones de retención, aunque este artículo no evalúa directamente el éxito de esas acciones.
+La primera es que predecir el abandono puede ayudar a priorizar
+acciones de retención, aunque este artículo no evalúa directamente el
+éxito de esas acciones.
 
-La segunda es que los autores comunican buenos resultados al combinar una red neuronal con selección de variables, equilibrado de clases y control del sobreajuste. Destaca especialmente su capacidad para detectar abandonos.
+La segunda es que los autores comunican buenos resultados al combinar
+una red neuronal con selección de variables, equilibrado de clases y
+control del sobreajuste. Destaca especialmente su capacidad para
+detectar abandonos.
 
-La tercera es que una cifra alta de aciertos necesita una evaluación bien documentada. En este trabajo quedan dudas sobre la separación de los datos y sobre la comparabilidad de los experimentos.
+La tercera es que una cifra alta de aciertos necesita una evaluación
+bien documentada. En este trabajo quedan dudas sobre la separación de
+los datos y sobre la comparabilidad de los experimentos.
 
-En resumen, es una propuesta prometedora, pero haría falta una evaluación más transparente y reproducible antes de concluir que constituye la mejor alternativa para una aplicación real.
+En resumen, es una propuesta prometedora, pero haría falta una
+evaluación más transparente y reproducible antes de concluir que
+constituye la mejor alternativa para una aplicación real.
 #+end_quote
-
-* Referencia y notas de lectura
-
-Fujo, S. W., Subramanian, S. y Khder, M. A. (2022). /Customer Churn Prediction in Telecommunication Industry Using Deep Learning/. Information Sciences Letters, 11(1), 185–198. DOI: [[https://doi.org/10.18576/isl/110120][10.18576/isl/110120]].
-
-Las páginas citadas son las páginas impresas del artículo, no la numeración del visor PDF.
-
-- Datos: tabla de características, p. 188. El texto da tamaños distintos en algún párrafo; aquí se siguen la tabla y la conclusión.
-- Método: pp. 188–190; resultados y configuración adicional: pp. 192–195.
-- Resultados: tabla rotulada «Table 2», p. 193. Se utiliza 73,90 % para Cell2Cell con validación cruzada, coherente con la tabla y la conclusión, aunque un párrafo indica 73,09 %.
-- Comparación con antecedentes: tablas de la p. 194.
-- Las limitaciones sobre fuga de datos y comparabilidad son una valoración crítica de la descripción metodológica, no resultados experimentales demostrados por los autores.
